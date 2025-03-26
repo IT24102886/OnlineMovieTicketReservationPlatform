@@ -1,34 +1,43 @@
 package lk.sliit.onlinemovieticketreservationplatform.onlinemovieticketreservationplatform;
 
+import java.time.LocalDate;
+import java.util.UUID;
+
 public class User {
-    private int userName;
-    private String password;
+    private String userId;
+    private String username;
     private String email;
-    private String contactNum;
-    private String paymentPreference;
+    private String password;
+    private String contactNumber;
+    private LocalDate registrationDate;
+    private String paymentPreferences;
 
-    public User(int userName, String password, String email, String contactNum, String paymentPreference) {
-        this.userName = userName;
-        this.password = password;
+    public User(String username, String email, String password,
+                String contactNumber, LocalDate now, String paymentPreferences) {
+        this.userId = UUID.randomUUID().toString();
+        this.username = username;
         this.email = email;
-        this.contactNum = contactNum;
-        this.paymentPreference = paymentPreference;
+        this.password = password; // In real apps, hash this!
+        this.contactNumber = contactNumber;
+        this.registrationDate = LocalDate.now();
+        this.paymentPreferences = paymentPreferences;
     }
 
-    public int getUserName() {
-        return userName;
+    // Getters and Setters
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserName(int userName) {
-        this.userName = userName;
+    public void setUserId(String userId) {
+        this.userId = (userId == null || userId.isEmpty()) ? UUID.randomUUID().toString() : userId;
     }
 
-    public String getPassword() {
-        return password;
+    public String getUsername() {
+        return username;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -39,19 +48,41 @@ public class User {
         this.email = email;
     }
 
-    public String getContactNum() {
-        return contactNum;
+    public String getPassword() {
+        return password;
     }
 
-    public void setContactNum(String contactNum) {
-        this.contactNum = contactNum;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getPaymentPreference() {
-        return paymentPreference;
+    public String getContactNumber() {
+        return contactNumber;
     }
 
-    public void setPaymentPreference(String paymentPreference) {
-        this.paymentPreference = paymentPreference;
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public String getPaymentPreferences() {
+        return paymentPreferences;
+    }
+
+    public void setPaymentPreferences(String paymentPreferences) {
+        this.paymentPreferences = paymentPreferences;
+    }
+
+    @Override
+    public String toString() {
+        return userId + "," + username + "," + email + "," + password + "," + contactNumber + "," + registrationDate + "," +
+                paymentPreferences;
     }
 }
