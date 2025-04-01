@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,6 +16,13 @@ import java.util.List;
 @WebServlet(name = "UserServlet", urlPatterns = {"/users"})
 public class UserServlet extends HttpServlet {
     private final UserManager userManager = new UserManager();
+    private String filePath;
+
+    @Override
+    public void init() throws ServletException {
+        filePath = getServletContext().getInitParameter("dataFilePath");
+        File file = new File(filePath);
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

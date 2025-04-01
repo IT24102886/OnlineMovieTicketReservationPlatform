@@ -7,9 +7,13 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public class UserManager {
-    private static final String FILE_PATH = "users.txt";
+    private static final String FILE_PATH = System.getProperty("user.home") + "/MovieTicketPlatform/users.txt";
     private static final ReentrantLock fileLock = new ReentrantLock();
-    private static final String DELIMITER = "|||"; // More reliable than comma
+    private static final String DELIMITER = "||";
+
+    static {
+        new File(System.getProperty("user.home") + "/MovieTicketPlatform").mkdirs();
+    }
 
     public void addUser(User user) throws IOException, IllegalArgumentException {
         fileLock.lock();
