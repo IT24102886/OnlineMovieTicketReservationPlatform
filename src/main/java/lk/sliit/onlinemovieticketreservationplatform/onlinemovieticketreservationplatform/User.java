@@ -4,40 +4,44 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public class User {
-    private String userId;
-    private String username;
+
+    private String userID;
+    private String name;
     private String email;
     private String password;
     private String contactNumber;
-    private LocalDate registrationDate;
-    private String paymentPreferences;
+    private boolean isAdmin = false;
 
-    public User(String username, String email, String password,
-                String contactNumber, LocalDate now, String paymentPreferences) {
-        this.userId = UUID.randomUUID().toString();
-        this.username = username;
+    // Default constructor
+    public User() {
+        this.userID = UUID.randomUUID().toString(); // Generate a unique ID by default
+        this.isAdmin = false;
+    }
+
+    // Parameterized constructor
+    public User(String userID, String name, String email, String password, String contactNumber) {
+        this.userID = (userID == null || userID.isEmpty()) ? UUID.randomUUID().toString() : userID;
+        this.name = name;
         this.email = email;
-        this.password = password; // In real apps, hash this!
+        this.password = password;
         this.contactNumber = contactNumber;
-        this.registrationDate = LocalDate.now();
-        this.paymentPreferences = paymentPreferences;
     }
 
     // Getters and Setters
     public String getUserId() {
-        return userId;
+        return userID;
     }
 
-    public void setUserId(String userId) {
-        this.userId = (userId == null || userId.isEmpty()) ? UUID.randomUUID().toString() : userId;
+    public void setMemberId(String memberId) {
+        this.userID = (userID == null || userID.isEmpty()) ? UUID.randomUUID().toString() : userID;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -64,25 +68,16 @@ public class User {
         this.contactNumber = contactNumber;
     }
 
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
+    public boolean isAdmin() {
+        return isAdmin;
     }
 
-    public void setRegistrationDate(LocalDate registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
-    public String getPaymentPreferences() {
-        return paymentPreferences;
-    }
-
-    public void setPaymentPreferences(String paymentPreferences) {
-        this.paymentPreferences = paymentPreferences;
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 
     @Override
     public String toString() {
-        return userId + "," + username + "," + email + "," + password + "," + contactNumber + "," + registrationDate + "," +
-                paymentPreferences;
+        return userID + "," + name + "," + email + "," + password + "," + contactNumber;
     }
 }

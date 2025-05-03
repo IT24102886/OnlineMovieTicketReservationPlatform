@@ -5,178 +5,156 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
-import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "UserServlet", urlPatterns = {"/users"})
+@WebServlet("/UserServlet")
 public class UserServlet extends HttpServlet {
-    private final UserManager userManager = new UserManager();
-    private String filePath;
+    private UserManager userManager = new UserManager();
 
-    @Override
-    public void init() throws ServletException {
-        filePath = getServletContext().getInitParameter("dataFilePath");
-        File file = new File(filePath);
-    }
-
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         String action = request.getParameter("action");
-        HttpSession session = request.getSession();
 
         try {
             switch (action) {
                 case "register":
-                    handleRegistration(request, response, session);
+                    registerUser(request, response);
                     break;
+
                 case "update":
-                    handleUpdate(request, response, session);
+                    updateUser(request, response);
                     break;
-                case "delete":
-                    handleDeletion(request, response, session);
-                    break;
+
                 case "login":
-                    handleLogin(request, response, session);
+                    authenticateUser(request, response);
                     break;
+
                 default:
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
             }
-        } catch (IllegalArgumentException e) {
-            session.setAttribute("errorMessage", e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/error.jsp");
         } catch (Exception e) {
-            session.setAttribute("errorMessage", "An unexpected error occurred");
-            response.sendRedirect(request.getContextPath() + "/error.jsp");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid request: " + e.getMessage());
         }
     }
 
-    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            String searchTerm = request.getParameter("search");
-            List<User> users = searchTerm != null && !searchTerm.isEmpty() ?
-                    searchUsers(searchTerm) : userManager.getAllUsers();
+        String action = request.getParameter("action");
 
-            request.setAttribute("users", users);
-            request.getRequestDispatcher("/WEB-INF/views/userDashboard.jsp").forward(request, response);
-        } catch (Exception e) {
-            request.getSession().setAttribute("errorMessage", "Failed to retrieve users");
-            response.sendRedirect(request.getContextPath() + "/error.jsp");
+        if (action != null) {
+            switch (action) {
+                case "delete":
+                    deleteUser(request, response);
+                    break;
+
+                case "viewAll":
+                    viewAllUsers(request, response);
+                    break;
+
+                case "viewProfile":
+                    viewUserProfile(request, response);
+                    break;
+
+                default:
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
+            }
+        } else {
+            // Default action: display all users (for admin)
+            viewAllUsers(request, response);
         }
     }
 
-    private void handleRegistration(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-            throws IOException {
-        // Validate input
-        String username = request.getParameter("username");
+    private void registerUser(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        String name = request.getParameter("name");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+        String contactNumber = request.getParameter("contactNumber");
 
-        if (username == null || username.trim().isEmpty() ||
-                email == null || email.trim().isEmpty() ||
-                password == null || password.trim().isEmpty()) {
-            throw new IllegalArgumentException("All fields are required");
-        }
-
-        // Create new user - now matches the User class constructor
-        User newUser = new User(
-                username,
-                email,
-                password, // Should be hashed in production!
-                request.getParameter("contactNumber"),
-                LocalDate.now(),
-                request.getParameter("paymentPreferences")
-        );
-
-        userManager.addUser(newUser);
-        session.setAttribute("successMessage", "Registration successful!");
-        response.sendRedirect(request.getContextPath() + "/login.jsp");
-    }
-    private void handleUpdate(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-            throws IOException {
-        String userId = (String) session.getAttribute("userId");
-        if (userId == null) {
-            throw new IllegalArgumentException("User not authenticated");
-        }
-
-        User existingUser = userManager.getUserById(userId);
-        if (existingUser == null) {
-            throw new IllegalArgumentException("User not found");
-        }
-
-        // Update user details
-        existingUser.setEmail(validateEmail(request.getParameter("email")));
-        existingUser.setContactNumber(request.getParameter("contactNumber"));
-        existingUser.setPaymentPreferences(request.getParameter("paymentPreferences"));
-
-        // Only update password if provided
-        String newPassword = request.getParameter("password");
-        if (newPassword != null && !newPassword.trim().isEmpty()) {
-            existingUser.setPassword(newPassword); // Should be hashed!
-        }
-
-        userManager.updateUser(existingUser);
-        session.setAttribute("successMessage", "Profile updated successfully");
-        response.sendRedirect(request.getContextPath() + "/userProfile.jsp");
-    }
-
-    private void handleDeletion(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-            throws IOException {
-        String userId = (String) session.getAttribute("userId");
-        if (userId == null) {
-            throw new IllegalArgumentException("User not authenticated");
-        }
-
-        userManager.deleteUser(userId);
-        session.invalidate();
-        session = request.getSession(true);
-        session.setAttribute("successMessage", "Account deleted successfully");
-        response.sendRedirect(request.getContextPath() + "/index.jsp");
-    }
-
-    private void handleLogin(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-            throws IOException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-
-        User user = userManager.getUserByUsername(username);
-        if (user == null || !user.getPassword().equals(password)) { // Should compare hashes!
-            session.setAttribute("errorMessage", "Invalid username or password");
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+        if (userManager.emailExists(email)) {
+            request.setAttribute("error", "Email already exists");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
 
-        session.setAttribute("userId", user.getUserId());
-        session.setAttribute("successMessage", "Login successful");
-        response.sendRedirect(request.getContextPath() + "/userDashboard.jsp");
-    }
+        User newUser = new User(null, name, email, password, contactNumber);
+        userManager.addUser(newUser);
 
-    private List<User> searchUsers(String searchTerm) throws IOException {
-        List<User> users = new ArrayList<>();
-        User user = userManager.getUserById(searchTerm);
-        if (user != null) {
-            users.add(user);
+        // For regular users, redirect to login
+        // For admin-added users, redirect to user list
+        if (request.getParameter("adminAction") != null) {
+            response.sendRedirect("UserServlet?action=viewAll");
         } else {
-            user = userManager.getUserByUsername(searchTerm);
-            if (user != null) {
-                users.add(user);
-            }
+            response.sendRedirect("login.jsp?registration=success");
         }
-        return users;
     }
 
-    private String validateEmail(String email) {
-        if (email == null || !email.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
-            throw new IllegalArgumentException("Invalid email format");
+    private void updateUser(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        String userId = request.getParameter("userId");
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String contactNumber = request.getParameter("contactNumber");
+        boolean isAdmin = Boolean.parseBoolean(request.getParameter("isAdmin"));
+
+        User updatedUser = new User(userId, name, email, password, contactNumber);
+        updatedUser.setAdmin(isAdmin);
+        userManager.updateUser(updatedUser);
+
+        response.sendRedirect("UserServlet?action=viewAll");
+    }
+
+    private void authenticateUser(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+
+        User user = userManager.authenticate(email, password);
+
+        if (user != null) {
+            request.getSession().setAttribute("user", user);
+            if (user.isAdmin()) {
+                response.sendRedirect("adminDashboard.jsp");
+            } else {
+                response.sendRedirect("userDashboard.jsp");
+            }
+        } else {
+            request.setAttribute("error", "Invalid email or password");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
         }
-        return email;
+    }
+
+    private void deleteUser(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        String userId = request.getParameter("userId");
+        userManager.deleteUser(userId);
+        response.sendRedirect("UserServlet?action=viewAll");
+    }
+
+    private void viewAllUsers(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        List<User> users = userManager.getAllUsers();
+        request.setAttribute("users", users);
+        request.getRequestDispatcher("viewUsers.jsp").forward(request, response);
+    }
+
+    private void viewUserProfile(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String userId = request.getParameter("userId");
+        List<User> users = userManager.getAllUsers();
+        User profileUser = users.stream()
+                .filter(u -> u.getUserId().equals(userId))
+                .findFirst()
+                .orElse(null);
+
+        if (profileUser != null) {
+            request.setAttribute("profileUser", profileUser);
+            request.getRequestDispatcher("userProfile.jsp").forward(request, response);
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
+        }
     }
 }

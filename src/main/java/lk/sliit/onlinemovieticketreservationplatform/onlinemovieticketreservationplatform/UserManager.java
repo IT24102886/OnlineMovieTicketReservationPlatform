@@ -1,172 +1,137 @@
 package lk.sliit.onlinemovieticketreservationplatform.onlinemovieticketreservationplatform;
 
 import java.io.*;
-import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public class UserManager {
-    private static final String FILE_PATH = System.getProperty("user.home") + "/MovieTicketPlatform/users.txt";
-    private static final ReentrantLock fileLock = new ReentrantLock();
-    private static final String DELIMITER = "||";
+    private static final String FILE_PATH = System.getProperty("user.home") + "/OOP/users.txt";
+    private List<User> users;
+    private Queue<User> adminApprovalQueue = new LinkedList<>();
 
-    static {
-        new File(System.getProperty("user.home") + "/MovieTicketPlatform").mkdirs();
+    public UserManager() {
+        this.users = loadUsers();
     }
 
-    public void addUser(User user) throws IOException, IllegalArgumentException {
-        fileLock.lock();
-        try {
-            if (getUserByUsername(user.getUsername()) != null) {
-                throw new IllegalArgumentException("Username already exists!");
-            }
+    // Load users from file
+    private List<User> loadUsers() {
+        List<User> loadedUsers = new ArrayList<>();
+        File file = new File(FILE_PATH);
 
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
-                writer.write(serializeUser(user));
-                writer.newLine();
-            }
-        } finally {
-            fileLock.unlock();
+        if (!file.exists()) {
+            return loadedUsers;
         }
-    }
 
-    public User getUserByUsername(String username) throws IOException {
-        fileLock.lock();
-        try {
-            try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    User user = deserializeUser(line);
-                    if (user != null && user.getUsername().equals(username)) {
-                        return user;
-                    }
-                }
-            }
-            return null;
-        } finally {
-            fileLock.unlock();
-        }
-    }
-
-    public User getUserById(String userId) throws IOException {
-        fileLock.lock();
-        try {
-            try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    User user = deserializeUser(line);
-                    if (user != null && user.getUserId().equals(userId)) {
-                        return user;
-                    }
-                }
-            }
-            return null;
-        } finally {
-            fileLock.unlock();
-        }
-    }
-
-    public void updateUser(User updatedUser) throws IOException {
-        fileLock.lock();
-        try {
-            List<User> users = getAllUsersInternal();
-            users = users.stream()
-                    .map(u -> u.getUserId().equals(updatedUser.getUserId()) ? updatedUser : u)
-                    .collect(Collectors.toList());
-            saveAllUsersInternal(users);
-        } finally {
-            fileLock.unlock();
-        }
-    }
-
-    public void deleteUser(String userId) throws IOException {
-        fileLock.lock();
-        try {
-            List<User> users = getAllUsersInternal();
-            users = users.stream()
-                    .filter(u -> !u.getUserId().equals(userId))
-                    .collect(Collectors.toList());
-            saveAllUsersInternal(users);
-        } finally {
-            fileLock.unlock();
-        }
-    }
-
-    public List<User> getAllUsers() throws IOException {
-        fileLock.lock();
-        try {
-            return getAllUsersInternal();
-        } finally {
-            fileLock.unlock();
-        }
-    }
-
-    private List<User> getAllUsersInternal() throws IOException {
-        List<User> users = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                User user = deserializeUser(line);
-                if (user != null) {
-                    users.add(user);
+                String[] parts = line.split(",");
+                if (parts.length >= 5) {
+                    User user = new User(
+                            parts[0],  // userId
+                            parts[1],  // name
+                            parts[2],  // email
+                            parts[3],  // password
+                            parts[4]   // contactNumber
+                    );
+                    if (parts.length > 5) {
+                        user.setAdmin(Boolean.parseBoolean(parts[5]));
+                    }
+                    loadedUsers.add(user);
                 }
             }
+        } catch (IOException e) {
+            System.err.println("Error loading users: " + e.getMessage());
         }
-        return users;
+        return loadedUsers;
     }
 
-    private void saveAllUsersInternal(List<User> users) throws IOException {
+    // Save users to file
+    private void saveUsers() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (User user : users) {
-                writer.write(serializeUser(user));
+                writer.write(userToString(user));
                 writer.newLine();
             }
+        } catch (IOException e) {
+            System.err.println("Error saving users: " + e.getMessage());
         }
     }
 
-    private String serializeUser(User user) {
-        return String.join(DELIMITER,
+    // Convert User to string for storage
+    private String userToString(User user) {
+        return String.join(",",
                 user.getUserId(),
-                user.getUsername(),
+                user.getName(),
                 user.getEmail(),
                 user.getPassword(),
                 user.getContactNumber(),
-                user.getRegistrationDate().toString(),
-                user.getPaymentPreferences()
+                String.valueOf(user.isAdmin())
         );
     }
 
-    private User deserializeUser(String line) {
-        try {
-            String[] data = line.split("\\|\\|\\|");
-            if (data.length != 8) return null;
+    // Required methods for AdminServlet
+    public List<User> getPendingAdminApprovals() {
+        return users.stream()
+                .filter(user -> !user.isAdmin() && adminApprovalQueue.contains(user))
+                .collect(Collectors.toList());
+    }
 
-            User user;
-            if ("Admin".equals(data[4])) {
-                user = new AdminUser(
-                        data[1], // username
-                        data[2], // email
-                        data[3], // password
-                        data[5], // contactNumber
-                        "Full"    // accessLevel
-                );
-            } else {
-                user = new User(
-                        data[1], // username
-                        data[2], // email
-                        data[3], // password
-                        data[5], // contactNumber
-                        LocalDate.now(), data[7]  // paymentPreferences
-                );
+    public User getUserById(String userId) {
+        return users.stream()
+                .filter(user -> user.getUserId().equals(userId))
+                .findFirst()
+                .orElse(null);
+    }
+
+    // Basic CRUD operations
+    public void addUser(User user) {
+        users.add(user);
+        saveUsers();
+    }
+
+    public List<User> getAllUsers() {
+        return new ArrayList<>(users);
+    }
+
+    public boolean updateUser(User updatedUser) {
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getUserId().equals(updatedUser.getUserId())) {
+                users.set(i, updatedUser);
+                saveUsers();
+                return true;
             }
-
-            user.setUserId(data[0]);
-            user.setRegistrationDate(LocalDate.parse(data[6]));
-            return user;
-        } catch (Exception e) {
-            System.err.println("Error deserializing user: " + e.getMessage());
-            return null;
         }
+        return false;
+    }
+
+    public boolean deleteUser(String userId) {
+        boolean removed = users.removeIf(user -> user.getUserId().equals(userId));
+        if (removed) {
+            saveUsers();
+        }
+        return removed;
+    }
+
+    // Authentication
+    public User authenticate(String email, String password) {
+        return users.stream()
+                .filter(user -> user.getEmail().equals(email) && user.getPassword().equals(password))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public boolean emailExists(String email) {
+        return users.stream()
+                .anyMatch(user -> user.getEmail().equalsIgnoreCase(email));
+    }
+
+    // Admin approval queue
+    public void addToAdminApprovalQueue(User user) {
+        adminApprovalQueue.add(user);
+    }
+
+    public User processAdminApprovalRequest() {
+        return adminApprovalQueue.poll();
     }
 }
