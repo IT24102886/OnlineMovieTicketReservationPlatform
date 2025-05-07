@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class UserManager {
-    private static final String FILE_PATH = System.getProperty("user.home") + "/OOP/users.txt";
+    private static final String FILE_PATH = System.getProperty("user.home") + "\\Desktop\\OOP\\users.txt";
     private List<User> users;
     private Queue<User> adminApprovalQueue = new LinkedList<>();
 
@@ -25,7 +25,7 @@ public class UserManager {
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
+                String[] parts = line.split(" , ");
                 if (parts.length >= 5) {
                     User user = new User(
                             parts[0],  // userId
@@ -60,7 +60,7 @@ public class UserManager {
 
     // Convert User to string for storage
     private String userToString(User user) {
-        return String.join(",",
+        return String.join(" , ",
                 user.getUserId(),
                 user.getName(),
                 user.getEmail(),
@@ -68,6 +68,30 @@ public class UserManager {
                 user.getContactNumber(),
                 String.valueOf(user.isAdmin())
         );
+    }
+
+    // Insertion sort by name
+    public List<User> insertionSortUsersByName() {
+        List<User> sortedUsers = new ArrayList<>(users);
+        int n = sortedUsers.size();
+        for (int i = 1; i < n; i++) {
+            User key = sortedUsers.get(i);
+            int j = i - 1;
+            while (j >= 0 && sortedUsers.get(j).getName().compareToIgnoreCase(key.getName()) > 0) {
+                sortedUsers.set(j + 1, sortedUsers.get(j));
+                j--;
+            }
+            sortedUsers.set(j + 1, key);
+        }
+        return sortedUsers;
+    }
+
+    // Fetch user by email
+    public User getUserByEmail(String email) {
+        return users.stream()
+                .filter(user -> user.getEmail().equalsIgnoreCase(email))
+                .findFirst()
+                .orElse(null);
     }
 
     // Required methods for AdminServlet

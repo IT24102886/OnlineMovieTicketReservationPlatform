@@ -19,8 +19,8 @@ public class UserLogoutServlet extends HttpServlet {
             session.invalidate();
         }
 
-        // Redirect to login page with success message
-        response.sendRedirect("login.jsp?logout=success");
+        // Redirect to index page
+        response.sendRedirect("index.jsp");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

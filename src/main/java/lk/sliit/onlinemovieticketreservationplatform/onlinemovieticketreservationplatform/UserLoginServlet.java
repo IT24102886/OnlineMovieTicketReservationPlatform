@@ -22,7 +22,7 @@ public class UserLoginServlet extends HttpServlet {
 
         if (user != null) {
             HttpSession session = request.getSession();
-            session.setAttribute("user", user);  // Changed attribute name to "user" for consistency
+            session.setAttribute("user", user);
 
             // Redirect based on user type
             if (user.isAdmin()) {
@@ -31,7 +31,6 @@ public class UserLoginServlet extends HttpServlet {
                 response.sendRedirect("userDashboard.jsp");
             }
         } else {
-            // Enhanced error handling with message
             request.setAttribute("error", "Invalid email or password");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
@@ -39,11 +38,7 @@ public class UserLoginServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Handle logout functionality
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-        response.sendRedirect("login.jsp?logout=success");
+        // Redirect to login page for GET requests
+        response.sendRedirect("login.jsp");
     }
 }
