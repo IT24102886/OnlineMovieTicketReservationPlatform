@@ -7,6 +7,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet("/AdminServlet")
 public class AdminServlet extends HttpServlet {
@@ -20,7 +25,7 @@ public class AdminServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("user");
 
-        // 1. Check if user is logged in and is an admin
+        // Check if user is logged in and is an admin
         if (currentUser == null || !currentUser.isAdmin()) {
             response.sendRedirect("login.jsp");
             return;
@@ -39,6 +44,15 @@ public class AdminServlet extends HttpServlet {
                 case "promoteUser":
                     promoteUser(request, response);
                     break;
+                case "updateMovie":
+                    updateMovie(request, response);
+                    break;
+                case "deleteMovie":
+                    deleteMovie(request, response);
+                    break;
+                case "addShowTimes":
+                    addShowTimes(request, response);
+                    break;
                 default:
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
             }
@@ -54,21 +68,21 @@ public class AdminServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("user");
 
-        // 2. Admin check
+        // Admin check
         if (currentUser == null || !currentUser.isAdmin()) {
             response.sendRedirect("login.jsp");
             return;
         }
 
-        // 3. Set data for admin dashboard
-        request.setAttribute("users", userManager.getAllUsers());
+        // Set data for admin dashboard
+        request.setAttribute("users", userManager.insertionSortUsersByName());
         request.setAttribute("movies", movieManager.getAllMovies());
         request.setAttribute("pendingApprovals", userManager.getPendingAdminApprovals());
 
         request.getRequestDispatcher("adminDashboard.jsp").forward(request, response);
     }
 
-    // 4. Helper Methods
+    // Helper Methods
     private void addMovie(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
@@ -76,11 +90,71 @@ public class AdminServlet extends HttpServlet {
         String description = request.getParameter("description");
         int duration = Integer.parseInt(request.getParameter("duration"));
         String genre = request.getParameter("genre");
+        LocalDate releaseDate = LocalDate.parse(request.getParameter("releaseDate"));
+        String director = request.getParameter("director");
+        String language = request.getParameter("language");
+        String ageRating = request.getParameter("ageRating");
+        String posterImageUrl = request.getParameter("posterImageUrl");
+        String trailerUrl = request.getParameter("trailerUrl");
+        boolean isNowShowing = Boolean.parseBoolean(request.getParameter("isNowShowing"));
 
-        Movie newMovie = new Movie(title, description, duration, genre);
+        Movie newMovie = new Movie(title, description, genre, duration, releaseDate, director, language, ageRating);
+        newMovie.setPosterImageUrl(posterImageUrl);
+        newMovie.setTrailerUrl(trailerUrl);
+        newMovie.setNowShowing(isNowShowing);
+
         movieManager.addMovie(newMovie);
 
         response.sendRedirect("AdminServlet?success=movieAdded");
+    }
+
+    private void updateMovie(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        String movieId = request.getParameter("movieId");
+        String title = request.getParameter("title");
+        String description = request.getParameter("description");
+        int duration = Integer.parseInt(request.getParameter("duration"));
+        String genre = request.getParameter("genre");
+        LocalDate releaseDate = LocalDate.parse(request.getParameter("releaseDate"));
+        String director = request.getParameter("director");
+        String language = request.getParameter("language");
+        String ageRating = request.getParameter("ageRating");
+        String posterImageUrl = request.getParameter("posterImageUrl");
+        String trailerUrl = request.getParameter("trailerUrl");
+        boolean isNowShowing = Boolean.parseBoolean(request.getParameter("isNowShowing"));
+
+        Movie updatedMovie = new Movie(title, description, genre, duration, releaseDate, director, language, ageRating);
+        updatedMovie.setMovieId(movieId);
+        updatedMovie.setPosterImageUrl(posterImageUrl);
+        updatedMovie.setTrailerUrl(trailerUrl);
+        updatedMovie.setNowShowing(isNowShowing);
+
+        movieManager.updateMovie(updatedMovie);
+
+        response.sendRedirect("AdminServlet?success=movieUpdated");
+    }
+
+    private void deleteMovie(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        String movieId = request.getParameter("movieId");
+        movieManager.deleteMovie(movieId);
+        response.sendRedirect("AdminServlet?success=movieDeleted");
+    }
+
+    private void addShowTimes(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        String movieId = request.getParameter("movieId");
+        String showTimes = request.getParameter("showTimes");
+        List<LocalTime> newShowTimes = Arrays.stream(showTimes.split(","))
+                .map(String::trim)
+                .map(LocalTime::parse)
+                .collect(Collectors.toList());
+
+        movieManager.addShowTimes(movieId, newShowTimes);
+        response.sendRedirect("AdminServlet?success=showTimesAdded");
     }
 
     private void deleteUser(HttpServletRequest request, HttpServletResponse response)
