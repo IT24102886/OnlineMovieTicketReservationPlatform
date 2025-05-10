@@ -1,26 +1,29 @@
-
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Login - Quick Flix</title>
-  <!-- Bootstrap 5 CSS -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Log in to QuickFlicks to access unlimited entertainment and personalized streaming services.">
+  <meta name="keywords" content="QuickFlicks, login, streaming, entertainment">
+  <meta name="author" content="QuickFlicks Team">
+  <title>Login - QuickFlicks</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-black: #141414;
-      --secondary-black: #1f1f1f;
-      --dark-gray: #2a2a2a;
+      --primary-black: #0D1321;
+      --secondary-black: #1A1A2E;
+      --dark-gray: #16213E;
       --medium-gray: #4a4a4a;
       --light-gray: #e5e5e5;
-      --accent-red: #e50914;
-      --accent-dark-red: #b20710;
+      --accent-pink: #FF1493;
+      --accent-dark-pink: #D81159;
+      --accent-cyan: #00FFFF;
       --white: #ffffff;
+      --glow-cyan: 0 0 10px rgba(0, 255, 255, 0.7);
     }
 
     body {
@@ -29,200 +32,194 @@
       color: var(--light-gray);
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-      font-family: 'Bebas Neue', sans-serif;
-      letter-spacing: 1px;
+      align-items: center;
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+      url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');
+      background-size: cover;
+      background-position: center;
     }
 
     .login-container {
-      max-width: 450px;
-      margin: auto;
-      padding: 3rem;
-      background-color: var(--secondary-black);
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      border-top: 4px solid var(--accent-red);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .login-container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
+      max-width: 500px;
       width: 100%;
-      height: 5px;
-      background: linear-gradient(90deg, var(--accent-red), #f84464, var(--accent-red));
+      margin: 2rem auto;
+      padding: 2.5rem;
+      background-color: rgba(13, 19, 33, 0.95);
+      border-radius: 10px;
+      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+      border-top: 4px solid var(--accent-dark-pink);
     }
 
     .login-logo {
-      text-align: center;
-      margin-bottom: 2.5rem;
-    }
-
-    .login-logo img {
-      height: 60px;
-      margin-bottom: 1rem;
-    }
-
-    .login-logo h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
       color: var(--white);
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .login-logo p {
-      color: var(--medium-gray);
-      font-size: 0.9rem;
-    }
-
-    .form-floating {
+      text-align: center;
       margin-bottom: 1.5rem;
+      letter-spacing: 2px;
+    }
+
+    .login-logo span {
+      color: var(--accent-dark-pink);
+    }
+
+    .login-title {
+      font-family: 'Bebas Neue', sans-serif;
+      color: var(--accent-cyan);
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      letter-spacing: 1px;
     }
 
     .form-control {
-      background-color: var(--dark-gray);
+      background-color: var(--secondary-black);
       border: 1px solid var(--medium-gray);
       color: var(--light-gray);
       height: 50px;
-      padding: 0 20px;
+      padding: 0.75rem 1.25rem;
+      transition: all 0.3s;
     }
 
     .form-control:focus {
-      background-color: var(--dark-gray);
-      color: var(--white);
-      border-color: var(--accent-red);
-      box-shadow: 0 0 0 0.25rem rgba(229, 9, 20, 0.25);
-    }
-
-    label {
-      color: var(--medium-gray);
-      padding: 0.8rem 1.25rem;
+      background-color: var(--secondary-black);
+      color: var(--light-gray);
+      border-color: var(--accent-cyan);
+      box-shadow: var(--glow-cyan);
     }
 
     .btn-login {
-      background-color: var(--accent-red);
+      background-color: var(--accent-dark-pink);
+      color: var(--white);
       border: none;
-      padding: 12px;
       font-weight: 700;
+      padding: 12px;
+      border-radius: 5px;
       letter-spacing: 1px;
-      text-transform: uppercase;
       transition: all 0.3s;
-      margin-top: 1rem;
+      width: 100%;
     }
 
     .btn-login:hover {
-      background-color: var(--accent-dark-red);
+      background-color: var(--accent-dark-pink);
       transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(229, 9, 20, 0.3);
+      box-shadow: 0 10px 20px rgba(216, 17, 89, 0.4);
+    }
+
+    .alert-danger {
+      background-color: rgba(216, 17, 89, 0.2);
+      color: var(--light-gray);
+      border-left: 4px solid var(--accent-dark-pink);
+      border-radius: 5px;
+    }
+
+    .alert-success {
+      background-color: rgba(40, 167, 69, 0.15);
+      color: var(--light-gray);
+      border-left: 4px solid var(--accent-cyan);
+      border-radius: 5px;
     }
 
     .signup-link {
       text-align: center;
-      margin-top: 2rem;
-      color: var(--medium-gray);
+      margin-top: 1.5rem;
+      color: var(--light-gray);
     }
 
     .signup-link a {
-      color: var(--accent-red);
+      color: var(--accent-cyan);
       text-decoration: none;
       font-weight: 600;
       transition: all 0.3s;
     }
 
     .signup-link a:hover {
-      color: var(--white);
+      color: var(--accent-pink);
       text-decoration: underline;
     }
 
-    .alert-danger {
-      background-color: rgba(229, 9, 20, 0.2);
-      border: 1px solid var(--accent-red);
-      color: var(--white);
-      border-radius: 5px;
-      padding: 12px;
-      margin-bottom: 1.5rem;
+    .input-icon {
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      transform: translateY(-50%);
+      color: var(--medium-gray);
     }
 
-    .footer {
-      background-color: var(--primary-black);
-      padding: 2rem 0;
-      margin-top: auto;
-      border-top: 1px solid var(--medium-gray);
+    .input-group {
+      position: relative;
     }
 
-    /* Animation */
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
+    .input-group input {
+      padding-left: 45px !important;
     }
 
-    .pulse-animation {
-      animation: pulse 2s infinite;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 576px) {
-      .login-container {
-        padding: 2rem;
-        margin: 2rem auto;
-      }
-
-      .login-logo img {
-        height: 50px;
-      }
+    label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
     }
   </style>
 </head>
 <body>
-<div class="container my-auto py-5">
+<div class="container">
   <div class="login-container">
-    <div class="login-logo">
-      <img src="${pageContext.request.contextPath}/assets/logo.png" alt="Quick Flix">
-      <h2>QUICK<span>FLIX</span></h2>
-      <p>Your ticket to unlimited entertainment</p>
-    </div>
+    <div class="login-logo">QUICK<span>FLICKS</span></div>
+    <h2 class="login-title">SIGN IN TO YOUR ACCOUNT</h2>
 
     <c:if test="${not empty error}">
-      <div class="alert alert-danger">
+      <div class="alert alert-danger alert-dismissible fade show">
         <i class="fas fa-exclamation-circle me-2"></i> ${error}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
     </c:if>
 
-    <form action="${pageContext.request.contextPath}/LoginServlet" method="post">
-      <div class="form-floating">
-        <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
-        <label for="email"><i class="fas fa-envelope me-2"></i>Email address</label>
+    <c:if test="${not empty sessionScope.registrationSuccess}">
+      <div class="alert alert-success alert-dismissible fade show">
+        <i class="fas fa-check-circle me-2"></i> ${sessionScope.registrationSuccess}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      <c:remove var="registrationSuccess" scope="session"/>
+    </c:if>
+
+    <form action="${pageContext.request.contextPath}/UserLoginServlet" method="post" id="loginForm">
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <div class="input-group">
+          <i class="fas fa-envelope input-icon"></i>
+          <input type="email" class="form-control" id="email" name="email" required placeholder="your@email.com" aria-describedby="emailHelp">
+        </div>
       </div>
 
-      <div class="form-floating">
-        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
-        <label for="password"><i class="fas fa-lock me-2"></i>Password</label>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <i class="fas fa-lock input-icon"></i>
+          <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password" aria-describedby="passwordHelp">
+        </div>
       </div>
 
-      <button type="submit" class="btn btn-login btn-primary w-100 pulse-animation">
-        <i class="fas fa-sign-in-alt me-2"></i>LOGIN
+      <button type="submit" class="btn btn-login mb-3">
+        <i class="fas fa-sign-in-alt me-2"></i> SIGN IN
       </button>
 
       <div class="signup-link">
-        New to Quick Flix? <a href="${pageContext.request.contextPath}/auth/register.jsp">Create your account</a>
+        New to QuickFlicks? <a href="register.jsp">Create an account</a>
       </div>
     </form>
   </div>
 </div>
 
-<footer class="footer">
-  <div class="container text-center">
-    <p>&copy; 2023 QUICK FLIX. ALL RIGHTS RESERVED.</p>
-  </div>
-</footer>
-
-<!-- Bootstrap 5 JS Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.getElementById('loginForm').addEventListener('submit', function(event) {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    if (!email || !password) {
+      event.preventDefault();
+      alert('Please fill in all required fields.');
+    }
+  });
+</script>
 </body>
 </html>
