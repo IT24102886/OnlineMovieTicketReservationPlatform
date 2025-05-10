@@ -13,8 +13,8 @@ public class LoginServlet extends HttpServlet {
     private UserManager userManager = new UserManager();
 
     // Admin credentials (consider moving these to a config file or database)
-    private static final String ADMIN_EMAIL = "admin@movietickets.com";
-    private static final String ADMIN_PASSWORD = "secureAdmin123";
+    private static final String ADMIN_EMAIL = "admin@quickflicks.com";
+    private static final String ADMIN_PASSWORD = "admin123";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
