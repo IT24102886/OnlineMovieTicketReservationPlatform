@@ -5,6 +5,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Log in to QuickFlicks Admin to manage the platform.">
+  <meta name="keywords" content="QuickFlicks, admin login, streaming, management">
+  <meta name="author" content="QuickFlicks Team">
   <title>Admin Login - QuickFlicks</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,6 +23,7 @@
       --accent-dark-pink: #D81159;
       --accent-cyan: #00FFFF;
       --white: #ffffff;
+      --glow-cyan: 0 0 10px rgba(0, 255, 255, 0.7);
     }
 
     body {
@@ -28,122 +32,92 @@
       color: var(--light-gray);
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
-      background-image: url('https://assets.nflxext.com/ffe/siteui/vlv3/9d3533b2-0e2b-40b2-95e0-ecd7979cc88b/2b3a03f5-905e-4a89-8d45-5cc5f9e9bf27/LK-en-20240311-popsignuptwoweeks-perspective_alpha_website_large.jpg');
+      align-items: center;
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+      url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');
       background-size: cover;
       background-position: center;
     }
 
-    body::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(13, 19, 33, 0.85);
-      z-index: 0;
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-      font-family: 'Bebas Neue', sans-serif;
-      letter-spacing: 1px;
-    }
-
     .login-container {
-      max-width: 450px;
-      margin: auto;
-      padding: 3rem;
-      background-color: rgba(26, 26, 46, 0.9);
-      border-radius: 10px;
-      box-shadow: 0 0 30px var(--accent-cyan);
-      border-top: 4px solid var(--accent-pink);
-      position: relative;
-      overflow: hidden;
-      z-index: 1;
-    }
-
-    .login-container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
+      max-width: 500px;
       width: 100%;
-      height: 5px;
-      background: linear-gradient(90deg, var(--accent-pink), var(--accent-cyan), var(--accent-pink));
+      margin: 2rem auto;
+      padding: 2.5rem;
+      background-color: rgba(13, 19, 33, 0.95);
+      border-radius: 10px;
+      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+      border-top: 4px solid var(--accent-dark-pink);
     }
 
     .login-logo {
-      text-align: center;
-      margin-bottom: 2.5rem;
-    }
-
-    .login-logo img {
-      height: 60px;
-      margin-bottom: 1rem;
-    }
-
-    .login-logo h2 {
-      color: var(--accent-cyan);
+      font-family: 'Bebas Neue', sans-serif;
       font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+      font-weight: 700;
+      color: var(--white);
+      text-align: center;
+      margin-bottom: 1.5rem;
+      letter-spacing: 2px;
     }
 
     .login-logo span {
-      color: var(--accent-pink);
+      color: var(--accent-dark-pink);
     }
 
-    .login-logo p {
-      color: var(--medium-gray);
-      font-size: 0.9rem;
-    }
-
-    .form-floating {
+    .login-title {
+      font-family: 'Bebas Neue', sans-serif;
+      color: var(--accent-cyan);
+      font-size: 1.8rem;
       margin-bottom: 1.5rem;
+      text-align: center;
+      letter-spacing: 1px;
     }
 
     .form-control {
-      background-color: var(--dark-gray);
+      background-color: var(--secondary-black);
       border: 1px solid var(--medium-gray);
       color: var(--light-gray);
       height: 50px;
-      padding: 0 20px;
+      padding: 0.75rem 1.25rem;
+      transition: all 0.3s;
     }
 
     .form-control:focus {
-      background-color: var(--dark-gray);
-      color: var(--white);
+      background-color: var(--secondary-black);
+      color: var(--light-gray);
       border-color: var(--accent-cyan);
-      box-shadow: 0 0 0 0.25rem rgba(0, 255, 255, 0.25);
-    }
-
-    label {
-      color: var(--medium-gray);
-      padding: 0.8rem 1.25rem;
+      box-shadow: var(--glow-cyan);
     }
 
     .btn-login {
-      background-color: var(--accent-pink);
+      background-color: var(--accent-dark-pink);
+      color: var(--white);
       border: none;
-      padding: 12px;
       font-weight: 700;
+      padding: 12px;
+      border-radius: 5px;
       letter-spacing: 1px;
-      text-transform: uppercase;
       transition: all 0.3s;
-      margin-top: 1rem;
+      width: 100%;
     }
 
     .btn-login:hover {
       background-color: var(--accent-dark-pink);
       transform: translateY(-3px);
-      box-shadow: 0 0 20px var(--accent-cyan);
+      box-shadow: 0 10px 20px rgba(216, 17, 89, 0.4);
+    }
+
+    .alert-danger {
+      background-color: rgba(216, 17, 89, 0.2);
+      color: var(--light-gray);
+      border-left: 4px solid var(--accent-dark-pink);
+      border-radius: 5px;
     }
 
     .user-login-link {
       text-align: center;
-      margin-top: 2rem;
-      color: var(--medium-gray);
+      margin-top: 1.5rem;
+      color: var(--light-gray);
     }
 
     .user-login-link a {
@@ -154,49 +128,64 @@
     }
 
     .user-login-link a:hover {
-      color: var(--white);
+      color: var(--accent-pink);
       text-decoration: underline;
-      text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
     }
 
-    .alert-danger {
-      background-color: rgba(255, 20, 147, 0.2);
-      border: 1px solid var(--accent-pink);
-      color: var(--white);
-      border-radius: 5px;
-      padding: 12px;
-      margin-bottom: 1.5rem;
+    .input-icon {
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      transform: translateY(-50%);
+      color: var(--medium-gray);
+    }
+
+    .input-group {
+      position: relative;
+    }
+
+    .input-group input {
+      padding-left: 45px !important;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
     }
   </style>
 </head>
 <body>
-<div class="container my-auto py-5">
+<div class="container">
   <div class="login-container">
-    <div class="login-logo">
-      <img src="${pageContext.request.contextPath}/assets/logo.png" alt="QuickFlicks Logo">
-      <h2>QUICK<span>FLIX</span> ADMIN</h2>
-      <p>Admin access to manage the platform</p>
-    </div>
+    <div class="login-logo">QUICK<span>FLICKS</span> ADMIN</div>
+    <h2 class="login-title">SIGN IN TO ADMIN ACCOUNT</h2>
 
     <c:if test="${not empty error}">
-      <div class="alert alert-danger">
+      <div class="alert alert-danger alert-dismissible fade show">
         <i class="fas fa-exclamation-circle me-2"></i> ${error}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
     </c:if>
 
-    <form action="${pageContext.request.contextPath}/LoginServlet" method="post">
-      <div class="form-floating">
-        <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
-        <label for="email"><i class="fas fa-envelope me-2"></i>Email address</label>
+    <form action="${pageContext.request.contextPath}/LoginServlet" method="post" id="loginForm">
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <div class="input-group">
+          <i class="fas fa-envelope input-icon"></i>
+          <input type="email" class="form-control" id="email" name="email" required placeholder="your@email.com" aria-describedby="emailHelp">
+        </div>
       </div>
 
-      <div class="form-floating">
-        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
-        <label for="password"><i class="fas fa-lock me-2"></i>Password</label>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <i class="fas fa-lock input-icon"></i>
+          <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password" aria-describedby="passwordHelp">
+        </div>
       </div>
 
-      <button type="submit" class="btn btn-login btn-primary w-100">
-        <i class="fas fa-sign-in-alt me-2"></i>ADMIN LOGIN
+      <button type="submit" class="btn btn-login mb-3">
+        <i class="fas fa-sign-in-alt me-2"></i> ADMIN SIGN IN
       </button>
 
       <div class="user-login-link">
@@ -206,12 +195,16 @@
   </div>
 </div>
 
-<footer class="footer">
-  <div class="container text-center">
-    <p>&copy; 2025 QUICKFLIX. ALL RIGHTS RESERVED.</p>
-  </div>
-</footer>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.getElementById('loginForm').addEventListener('submit', function(event) {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    if (!email || !password) {
+      event.preventDefault();
+      alert('Please fill in all required fields.');
+    }
+  });
+</script>
 </body>
 </html>
