@@ -250,7 +250,7 @@
 
             <!-- Login Link -->
             <div class="login-link">
-                Already have an account? <a href="index.jsp">Sign In</a>
+                Already have an account? <a href="login.jsp">Sign In</a>
             </div>
         </form>
     </div>
