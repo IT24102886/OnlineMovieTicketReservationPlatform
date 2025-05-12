@@ -110,15 +110,16 @@
 
     /* Hero Carousel */
     .hero-section {
-      height: 90vh;
+      height: 100vh;
       min-height: 700px;
       position: relative;
       overflow: hidden;
+      z-index: 1;
     }
 
     .hero-carousel {
       width: 100%;
-      height: 100%;
+      height: 100vh;
       object-fit: cover;
     }
 
@@ -163,6 +164,11 @@
       margin-bottom: 15px;
       text-transform: uppercase;
       font-size: 0.9rem;
+    }
+
+    section:not(.hero-section) {
+      position: relative;
+      z-index: 0;
     }
 
     /* Buttons */
@@ -474,8 +480,8 @@
       background-color: var(--secondary-black);
       border-radius: 10px;
       padding: 20px;
-      transition: all: 0.3s;
-      height: 100px;
+      transition: all 0.3s;
+      height: 100%;
       border-left: 4px solid transparent;
     }
 
@@ -630,10 +636,10 @@
         font-size: 4rem;
       }
       .movie-poster {
-        height: 300px;
+        height: 500px;
       }
       .hero-section {
-        height: 70vh;
+        height: 80vh;
         min-height: 500px;
       }
     }
@@ -646,10 +652,10 @@
         font-size: 1.2rem;
       }
       .movie-poster {
-        height: 250px;
+        height: 4000px;
       }
       .hero-section {
-        height: 60vh;
+        height: 70vh;
         min-height: 400px;
       }
     }
@@ -662,7 +668,7 @@
         font-size: 2rem;
       }
       .hero-section {
-        height: 50vh;
+        height: 60vh;
         min-height: 300px;
       }
       .hero-subtitle {
