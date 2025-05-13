@@ -1,22 +1,35 @@
 package lk.sliit.onlinemovieticketreservationplatform.onlinemovieticketreservationplatform;
 
-public abstract class Movie {
+import java.time.LocalDate;
+
+public class Movie {
     private int id;
     private String title;
     private String genre;
     private int duration;
     private String showtime;
     private boolean available;
+    private LocalDate releaseDate;
 
-    // Constructor (protected to restrict instantiation outside this file)
-    protected Movie(int id, String title, String genre, int duration, String showtime) {
+    // Constructor is now public since we're not using subclasses
+    public Movie(int id, String title, String genre, int duration, String showtime, LocalDate releaseDate) {
         this.id = id;
         this.title = title;
         this.genre = genre;
         this.duration = duration;
         this.showtime = showtime;
+        this.releaseDate = releaseDate;
         this.available = true;
     }
+
+    // Getters & Setters
+    public int getId() { return id; }
+    public String getTitle() { return title; }
+    public String getGenre() { return genre; }
+    public int getDuration() { return duration; }
+    public String getShowtime() { return showtime; }
+    public boolean isAvailable() { return available; }
+    public LocalDate getReleaseDate() { return releaseDate; }
 
     public void setTitle(String title) {
         this.title = title;
@@ -34,52 +47,34 @@ public abstract class Movie {
         this.showtime = showtime;
     }
 
-    // Abstract method (forces subclasses to define their format)
-    public abstract String getFormat();
-
-    // Static factory methods for creating movies
-    public static Movie createRegularMovie(int id, String title, String genre, int duration, String showtime) {
-        return new RegularMovie(id, title, genre, duration, showtime);
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 
-    public static Movie createIMAXMovie(int id, String title, String genre, int duration, String showtime) {
-        return new IMAXMovie(id, title, genre, duration, showtime);
+    public void setReleaseDate(LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
-    // Inner class for Regular Movies
-    private static class RegularMovie extends Movie {
-        public RegularMovie(int id, String title, String genre, int duration, String showtime) {
-            super(id, title, genre, duration, showtime);
+    // Insertion sort to sort movies by release date (ascending order)
+    public static void sortByReleaseDate(Movie[] movies) {
+        if (movies == null || movies.length <= 1) {
+            return;
         }
 
-        @Override
-        public String getFormat() {
-            return "REGULAR";
-        }
-    }
+        for (int i = 1; i < movies.length; i++) {
+            Movie current = movies[i];
+            int j = i - 1;
 
-    // Inner class for IMAX Movies
-    private static class IMAXMovie extends Movie {
-        public IMAXMovie(int id, String title, String genre, int duration, String showtime) {
-            super(id, title, genre, duration, showtime);
-        }
-
-        @Override
-        public String getFormat() {
-            return "IMAX";
+            // Move elements that are after current's release date to one position ahead
+            while (j >= 0 && movies[j].getReleaseDate().isAfter(current.getReleaseDate())) {
+                movies[j + 1] = movies[j];
+                j--;
+            }
+            movies[j + 1] = current;
         }
     }
 
-    // Getters & Setters (same as before)
-    public int getId() { return id; }
-    public String getTitle() { return title; }
-    public String getGenre() { return genre; }
-    public int getDuration() { return duration; }
-    public String getShowtime() { return showtime; }
-    public boolean isAvailable() { return available; }
-    public void setAvailable(boolean available) { this.available = available; }
-
-    // Serialization/Deserialization (updated to use factory methods)
+    // Serialization/Deserialization (simplified)
     public static Movie fromString(String line) {
         String[] parts = line.split("\\|");
         int id = Integer.parseInt(parts[0]);
@@ -88,12 +83,9 @@ public abstract class Movie {
         int duration = Integer.parseInt(parts[3]);
         String showtime = parts[4];
         boolean available = Boolean.parseBoolean(parts[5]);
-        String format = parts[6];
+        LocalDate releaseDate = LocalDate.parse(parts[6]);
 
-        Movie movie = format.equals("IMAX") ?
-                createIMAXMovie(id, title, genre, duration, showtime) :
-                createRegularMovie(id, title, genre, duration, showtime);
-
+        Movie movie = new Movie(id, title, genre, duration, showtime, releaseDate);
         movie.setAvailable(available);
         return movie;
     }
@@ -106,7 +98,7 @@ public abstract class Movie {
                 String.valueOf(duration),
                 showtime,
                 String.valueOf(available),
-                getFormat()
+                releaseDate.toString()
         );
     }
 }

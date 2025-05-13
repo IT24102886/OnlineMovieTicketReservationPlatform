@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,11 @@ public class MovieServlet extends HttpServlet {
             movies = filterMovies(movies, searchTerm, searchType);
         }
 
+        // Sort movies by release date
+        Movie[] moviesArray = movies.toArray(new Movie[0]);
+        Movie.sortByReleaseDate(moviesArray);
+        movies = Arrays.asList(moviesArray);
+
         request.setAttribute("movies", movies);
         request.getRequestDispatcher("/movies.jsp").forward(request, response);
     }
@@ -39,22 +45,14 @@ public class MovieServlet extends HttpServlet {
     // POST: Add new movie
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String format = request.getParameter("format");
-        Movie movie = format.equalsIgnoreCase("IMAX") ?
-                Movie.createIMAXMovie(
-                        generateId(request),
-                        request.getParameter("title"),
-                        request.getParameter("genre"),
-                        Integer.parseInt(request.getParameter("duration")),
-                        request.getParameter("showtime")
-                ) :
-                Movie.createRegularMovie(
-                        generateId(request),
-                        request.getParameter("title"),
-                        request.getParameter("genre"),
-                        Integer.parseInt(request.getParameter("duration")),
-                        request.getParameter("showtime")
-                );
+        Movie movie = new Movie(
+                generateId(request),
+                request.getParameter("title"),
+                request.getParameter("genre"),
+                Integer.parseInt(request.getParameter("duration")),
+                request.getParameter("showtime"),
+                LocalDate.parse(request.getParameter("releaseDate"))
+        );
 
         List<Movie> movies = readMovies(request);
         movies.add(movie);
@@ -76,6 +74,7 @@ public class MovieServlet extends HttpServlet {
                 m.setDuration(Integer.parseInt(params.get("duration")));
                 m.setShowtime(params.get("showtime"));
                 m.setAvailable(Boolean.parseBoolean(params.get("available")));
+                m.setReleaseDate(LocalDate.parse(params.get("releaseDate")));
                 writeMovies(movies, request);
                 response.setStatus(HttpServletResponse.SC_OK);
                 return;
@@ -107,6 +106,7 @@ public class MovieServlet extends HttpServlet {
                         case "title": return m.getTitle().toLowerCase().contains(term.toLowerCase());
                         case "genre": return m.getGenre().toLowerCase().contains(term.toLowerCase());
                         case "showtime": return m.getShowtime().contains(term);
+                        case "releaseDate": return m.getReleaseDate().toString().contains(term);
                         default: return true;
                     }
                 })
