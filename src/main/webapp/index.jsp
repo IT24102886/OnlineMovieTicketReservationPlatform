@@ -474,7 +474,7 @@
             background-color: var(--secondary-black);
             border-radius: 10px;
             padding: 20px;
-            transition: all: 0.3s;
+            transition: all 0.3s;
             height: 100%;
             border-left: 4px solid transparent;
         }
