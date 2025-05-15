@@ -1,3 +1,4 @@
+//
 //package lk.sliit.onlinemovieticketreservationplatform.onlinemovieticketreservationplatform;
 //
 //import jakarta.servlet.ServletException;
@@ -22,15 +23,15 @@
 //                case "register":
 //                    registerUser(request, response);
 //                    break;
-//
 //                case "update":
 //                    updateUser(request, response);
 //                    break;
-//
 //                case "login":
 //                    authenticateUser(request, response);
 //                    break;
-//
+//                case "searchByName":
+//                    searchUsersByName(request, response);
+//                    break;
 //                default:
 //                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
 //            }
@@ -48,15 +49,18 @@
 //                case "delete":
 //                    deleteUser(request, response);
 //                    break;
-//
 //                case "viewAll":
 //                    viewAllUsers(request, response);
 //                    break;
-//
 //                case "viewProfile":
 //                    viewUserProfile(request, response);
 //                    break;
-//
+//                case "sortByName":
+//                    sortUsersByName(request, response);
+//                    break;
+//                case "sortByDate":
+//                    sortUsersByDate(request, response);
+//                    break;
 //                default:
 //                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
 //            }
@@ -79,7 +83,7 @@
 //            return;
 //        }
 //
-//        User newUser = new User(null, name, email, password, contactNumber);
+//        User newUser = new User(null, name, email, password, contactNumber, null);
 //        userManager.addUser(newUser);
 //
 //        // For regular users, redirect to login
@@ -100,7 +104,7 @@
 //        String contactNumber = request.getParameter("contactNumber");
 //        boolean isAdmin = Boolean.parseBoolean(request.getParameter("isAdmin"));
 //
-//        User updatedUser = new User(userId, name, email, password, contactNumber);
+//        User updatedUser = new User(userId, name, email, password, contactNumber, null);
 //        updatedUser.setAdmin(isAdmin);
 //        userManager.updateUser(updatedUser);
 //
@@ -144,11 +148,7 @@
 //    private void viewUserProfile(HttpServletRequest request, HttpServletResponse response)
 //            throws ServletException, IOException {
 //        String userId = request.getParameter("userId");
-//        List<User> users = userManager.getAllUsers();
-//        User profileUser = users.stream()
-//                .filter(u -> u.getUserId().equals(userId))
-//                .findFirst()
-//                .orElse(null);
+//        User profileUser = userManager.getUserById(userId);
 //
 //        if (profileUser != null) {
 //            request.setAttribute("profileUser", profileUser);
@@ -157,9 +157,30 @@
 //            response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
 //        }
 //    }
+//
+//    private void sortUsersByName(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//        List<User> users = userManager.insertionSortUsersByName();
+//        request.setAttribute("users", users);
+//        request.getRequestDispatcher("viewUsers.jsp").forward(request, response);
+//    }
+//
+//    private void sortUsersByDate(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//        List<User> users = userManager.insertionSortUsersByRegistrationDate();
+//        request.setAttribute("users", users);
+//        request.getRequestDispatcher("viewUsers.jsp").forward(request, response);
+//    }
+//
+//    private void searchUsersByName(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//        String searchName = request.getParameter("searchName");
+//        List<User> users = userManager.searchUsersByName(searchName);
+//        request.setAttribute("users", users);
+//        request.setAttribute("searchName", searchName);
+//        request.getRequestDispatcher("viewUsers.jsp").forward(request, response);
+//    }
 //}
-
-
 
 
 
@@ -262,19 +283,46 @@ public class UserServlet extends HttpServlet {
     }
 
     private void updateUser(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+            throws IOException, ServletException {
         String userId = request.getParameter("userId");
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String contactNumber = request.getParameter("contactNumber");
         boolean isAdmin = Boolean.parseBoolean(request.getParameter("isAdmin"));
+        String fromProfile = request.getParameter("fromProfile");
 
-        User updatedUser = new User(userId, name, email, password, contactNumber, null);
+        // Check if the new email is already taken by another user
+        User existingUser = userManager.getUserByEmail(email);
+        if (existingUser != null && !existingUser.getUserId().equals(userId)) {
+            request.setAttribute("error", "Email already exists");
+            request.getRequestDispatcher("editProfile.jsp").forward(request, response);
+            return;
+        }
+
+        // Get the current user to preserve the existing password if none provided
+        User currentUser = userManager.getUserById(userId);
+        if (currentUser == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
+            return;
+        }
+
+        // Use existing password if none provided
+        String finalPassword = (password == null || password.trim().isEmpty()) ? currentUser.getPassword() : password;
+
+        User updatedUser = new User(userId, name, email, finalPassword, contactNumber, currentUser.getRegisteredDateTime());
         updatedUser.setAdmin(isAdmin);
         userManager.updateUser(updatedUser);
 
-        response.sendRedirect("UserServlet?action=viewAll");
+        // Redirect based on context
+        User sessionUser = (User) request.getSession().getAttribute("user");
+        if ("true".equals(fromProfile) || (sessionUser != null && !sessionUser.isAdmin())) {
+            // Update session with new user details
+            request.getSession().setAttribute("user", updatedUser);
+            response.sendRedirect("userDashboard.jsp");
+        } else {
+            response.sendRedirect("UserServlet?action=viewAll");
+        }
     }
 
     private void authenticateUser(HttpServletRequest request, HttpServletResponse response)
