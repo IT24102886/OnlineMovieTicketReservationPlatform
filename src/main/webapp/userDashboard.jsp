@@ -521,17 +521,12 @@
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link active" href="userDashboard.jsp">
-                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                            <i class="fas fa-tachometer-alt me-2"></i> My Profile
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/index.jsp">
                             <i class="fas fa-home me-2"></i> Home
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="userProfile.jsp">
-                            <i class="fas fa-user me-2"></i> My Profile
                         </a>
                     </li>
                     <li class="nav-item">
@@ -542,6 +537,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="select-cinema.jsp">
                             <i class="fas fa-ticket-alt me-2"></i> Buy Tickets
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="userProfile.jsp">
+                            <i class="fas fa-user me-2"></i> Give Feedback
                         </a>
                     </li>
                     <li class="nav-item mt-4">
@@ -608,7 +608,7 @@
                             <div class="d-grid gap-2">
                                 <a href="movies.jsp" class="btn btn-red">Browse Movies</a>
                                 <a href="select-cinema.jsp" class="btn btn-red">Buy Tickets</a>
-                                <a href="userProfile.jsp" class="btn btn-red">View Profile</a>
+                                <a href="feedback.jsp" class="btn btn-red">Give Feedback</a>
                             </div>
                         </div>
                     </div>
