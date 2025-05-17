@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@WebServlet("/movies/*")
+@WebServlet({"/movies/*", "/movies/data"})
 public class MovieServlet extends HttpServlet {
     private static final String FILE_PATH = "/WEB-INF/classes/movies.txt";
 
@@ -21,9 +21,40 @@ public class MovieServlet extends HttpServlet {
         return request.getServletContext().getRealPath(FILE_PATH);
     }
 
-    // GET: List all movies or search
+    // GET: Handle movie listing or data file generation
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String pathInfo = request.getPathInfo();
+
+        if ("/data".equals(pathInfo)) {
+            // Generate movies-data.js
+            response.setContentType("application/javascript");
+            List<Movie> movies = readMovies(request);
+            StringBuilder jsContent = new StringBuilder();
+            jsContent.append("const sampleMovies = [\n");
+            for (int i = 0; i < movies.size(); i++) {
+                Movie movie = movies.get(i);
+                jsContent.append("    {\n");
+                jsContent.append("        id: ").append(movie.getId()).append(",\n");
+                jsContent.append("        title: \"").append(movie.getTitle().replace("\"", "\\\"")).append("\",\n");
+                jsContent.append("        posterPath: \"").append(movie.getPosterPath().replace("\"", "\\\"")).append("\",\n");
+                jsContent.append("        releaseDate: \"").append(movie.getReleaseDate().toString()).append("\",\n");
+                jsContent.append("        runtime: ").append(movie.getDuration()).append(",\n");
+                jsContent.append("        voteAverage: ").append(movie.getVoteAverage()).append(",\n");
+                jsContent.append("        genres: [").append(Arrays.stream(movie.getGenres()).mapToObj(String::valueOf).collect(Collectors.joining(", "))).append("],\n");
+                jsContent.append("        overview: \"").append(movie.getOverview().replace("\"", "\\\"")).append("\"\n");
+                jsContent.append("    }");
+                if (i < movies.size() - 1) {
+                    jsContent.append(",");
+                }
+                jsContent.append("\n");
+            }
+            jsContent.append("];\n");
+            response.getWriter().write(jsContent.toString());
+            return;
+        }
+
+        // Existing GET logic for listing movies
         List<Movie> movies = readMovies(request);
 
         // Search functionality
@@ -45,13 +76,21 @@ public class MovieServlet extends HttpServlet {
     // POST: Add new movie
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String genresStr = request.getParameter("genres");
+        int[] genres = genresStr != null ? Arrays.stream(genresStr.split(","))
+                .mapToInt(Integer::parseInt).toArray() : new int[]{0};
+
         Movie movie = new Movie(
                 generateId(request),
                 request.getParameter("title"),
                 request.getParameter("genre"),
                 Integer.parseInt(request.getParameter("duration")),
                 request.getParameter("showtime"),
-                LocalDate.parse(request.getParameter("releaseDate"))
+                LocalDate.parse(request.getParameter("releaseDate")),
+                request.getParameter("posterPath"),
+                Double.parseDouble(request.getParameter("voteAverage")),
+                genres,
+                request.getParameter("overview")
         );
 
         List<Movie> movies = readMovies(request);
@@ -75,6 +114,13 @@ public class MovieServlet extends HttpServlet {
                 m.setShowtime(params.get("showtime"));
                 m.setAvailable(Boolean.parseBoolean(params.get("available")));
                 m.setReleaseDate(LocalDate.parse(params.get("releaseDate")));
+                m.setPosterPath(params.get("posterPath"));
+                m.setVoteAverage(Double.parseDouble(params.get("voteAverage")));
+                String genresStr = params.get("genres");
+                int[] genres = genresStr != null ? Arrays.stream(genresStr.split(","))
+                        .mapToInt(Integer::parseInt).toArray() : new int[]{0};
+                m.setGenres(genres);
+                m.setOverview(params.get("overview"));
                 writeMovies(movies, request);
                 response.setStatus(HttpServletResponse.SC_OK);
                 return;
