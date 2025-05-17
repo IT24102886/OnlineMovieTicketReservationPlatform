@@ -1,0 +1,284 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Quick Flicks</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-black: #0D1321;
+            --secondary-black: #1A1A2E;
+            --dark-gray: #16213E;
+            --medium-gray: #4a4a4a;
+            --light-gray: #e5e5e5;
+            --accent-pink: #FF1493;
+            --accent-dark-pink: #D81159;
+            --accent-cyan: #00FFFF;
+            --white: #ffffff;
+            --glow-cyan: 0 0 10px rgba(0, 255, 255, 0.7);
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--primary-black);
+            color: var(--light-gray);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+            url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .register-container {
+            max-width: 500px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            background-color: rgba(13, 19, 33, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+            border-top: 4px solid var(--accent-dark-pink);
+        }
+
+        .register-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--white);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            letter-spacing: 2px;
+        }
+
+        .register-logo span {
+            color: var(--accent-dark-pink);
+        }
+
+        .register-title {
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--accent-cyan);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .form-control {
+            background-color: var(--secondary-black);
+            border: 1px solid var(--medium-gray);
+            color: var(--light-gray);
+            height: 50px;
+            padding: 0.75rem 1.25rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            background-color: var(--secondary-black);
+            color: var(--light-gray);
+            border-color: var(--accent-cyan);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .btn-register {
+            background-color: var(--accent-dark-pink);
+            color: var(--white);
+            border: none;
+            font-weight: 700;
+            padding: 12px;
+            border-radius: 5px;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .btn-register:hover {
+            background-color: var(--accent-dark-pink);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(216, 17, 89, 0.4);
+        }
+
+        .alert-danger {
+            background-color: rgba(216, 17, 89, 0.2);
+            color: var(--light-gray);
+            border-left: 4px solid var(--accent-dark-pink);
+            border-radius: 5px;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--light-gray);
+        }
+
+        .login-link a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .login-link a:hover {
+            color: var(--accent-pink);
+            text-decoration: underline;
+        }
+
+        .input-icon {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            color: var(--medium-gray);
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group input {
+            padding-left: 45px !important;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+        }
+
+        .form-check-label a {
+            color: var(--accent-cyan) !important;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .form-check-label a:hover {
+            color: var(--accent-pink) !important;
+            text-decoration: underline;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="register-container">
+        <div class="register-logo">QUICK<span>FLICKS</span></div>
+        <h2 class="register-title">CREATE YOUR ACCOUNT</h2>
+
+        <c:if test="${not empty error}">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <i class="fas fa-exclamation-circle me-2"></i>${error}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </c:if>
+
+        <form action="${pageContext.request.contextPath}/register" method="post">
+            <!-- Full Name -->
+            <div class="mb-3">
+                <label for="name" class="form-label">Full Name</label>
+                <div class="input-group">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" class="form-control" id="name" name="name" required
+                           placeholder="Enter your full name">
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <div class="input-group">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" class="form-control" id="email" name="email" required
+                           placeholder="your@email.com">
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" class="form-control" id="password" name="password" required
+                           placeholder="At least 8 characters" minlength="8">
+                </div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                <div class="input-group">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" class="form-control" id="confirmPassword"
+                           name="confirmPassword" required placeholder="Re-enter your password">
+                </div>
+            </div>
+
+            <!-- Contact Number -->
+            <div class="mb-3">
+                <label for="contactNumber" class="form-label">Contact Number</label>
+                <div class="input-group">
+                    <i class="fas fa-phone input-icon"></i>
+                    <input type="tel" class="form-control" id="contactNumber"
+                           name="contactNumber" required placeholder="+94 77 123 4567">
+                </div>
+            </div>
+
+            <!-- Terms Checkbox -->
+            <div class="mb-4 form-check">
+                <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
+                <label class="form-check-label" for="terms">
+                    I agree to the <a href="#">Terms of Service</a> and
+                    <a href="#">Privacy Policy</a>
+                </label>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-register mb-3">
+                <i class="fas fa-ticket-alt me-2"></i> JOIN QUICKFLICKS
+            </button>
+
+            <!-- Login Link -->
+            <div class="login-link">
+                Already have an account? <a href="login.jsp">Sign In</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Bootstrap 5 JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Form validation
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('password').value;
+        const termsChecked = document.getElementById('terms').checked;
+
+        if (!termsChecked) {
+            e.preventDefault();
+            alert('You must agree to the Terms of Service and Privacy Policy');
+            return false;
+        }
+
+        if (password !== confirmPassword) {
+            e.preventDefault();
+            alert('Passwords do not match');
+            return false;
+        }
+
+        return true;
+    });
+</script>
+</body>
+</html>

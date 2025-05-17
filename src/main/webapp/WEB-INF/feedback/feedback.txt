@@ -1,0 +1,6 @@
+# QuickFlicks User Feedback Log
+# Format: Each feedback entry is separated by a line of dashes
+# Fields: User, Rating, Type, Feedback, Date
+# Created: 2024 
+
+
