@@ -1,4 +1,3 @@
-//
 //package lk.sliit.onlinemovieticketreservationplatform.onlinemovieticketreservationplatform;
 //
 //import jakarta.servlet.ServletException;
@@ -12,7 +11,7 @@
 //
 //@WebServlet("/UserServlet")
 //public class UserServlet extends HttpServlet {
-//    private UserManager userManager = new UserManager();
+//    private UserManager userManager = UserManager.getInstance();
 //
 //    protected void doPost(HttpServletRequest request, HttpServletResponse response)
 //            throws ServletException, IOException {
@@ -65,7 +64,6 @@
 //                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
 //            }
 //        } else {
-//            // Default action: display all users (for admin)
 //            viewAllUsers(request, response);
 //        }
 //    }
@@ -86,8 +84,6 @@
 //        User newUser = new User(null, name, email, password, contactNumber, null);
 //        userManager.addUser(newUser);
 //
-//        // For regular users, redirect to login
-//        // For admin-added users, redirect to user list
 //        if (request.getParameter("adminAction") != null) {
 //            response.sendRedirect("UserServlet?action=viewAll");
 //        } else {
@@ -108,7 +104,8 @@
 //        updatedUser.setAdmin(isAdmin);
 //        userManager.updateUser(updatedUser);
 //
-//        response.sendRedirect("UserServlet?action=viewAll");
+////        response.sendRedirect("UserServlet?action=viewAll");
+//        response.sendRedirect("userDashboard.jsp");
 //    }
 //
 //    private void authenticateUser(HttpServletRequest request, HttpServletResponse response)
@@ -182,10 +179,6 @@
 //    }
 //}
 
-
-
-
-
 package lk.sliit.onlinemovieticketreservationplatform.onlinemovieticketreservationplatform;
 
 import jakarta.servlet.ServletException;
@@ -196,10 +189,12 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
 @WebServlet("/UserServlet")
 public class UserServlet extends HttpServlet {
-    private UserManager userManager = new UserManager();
+    private UserManager userManager = UserManager.getInstance();
+    private static final Logger LOGGER = Logger.getLogger(UserServlet.class.getName());
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -223,6 +218,7 @@ public class UserServlet extends HttpServlet {
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
             }
         } catch (Exception e) {
+            LOGGER.severe("Error processing POST request: " + e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid request: " + e.getMessage());
         }
     }
@@ -252,7 +248,6 @@ public class UserServlet extends HttpServlet {
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
             }
         } else {
-            // Default action: display all users (for admin)
             viewAllUsers(request, response);
         }
     }
@@ -264,6 +259,13 @@ public class UserServlet extends HttpServlet {
         String password = request.getParameter("password");
         String contactNumber = request.getParameter("contactNumber");
 
+        if (name == null || email == null || password == null || contactNumber == null ||
+                name.isEmpty() || email.isEmpty() || password.isEmpty() || contactNumber.isEmpty()) {
+            request.setAttribute("error", "All fields are required");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        }
+
         if (userManager.emailExists(email)) {
             request.setAttribute("error", "Email already exists");
             request.getRequestDispatcher("register.jsp").forward(request, response);
@@ -272,9 +274,8 @@ public class UserServlet extends HttpServlet {
 
         User newUser = new User(null, name, email, password, contactNumber, null);
         userManager.addUser(newUser);
+        LOGGER.info("Registered new user: " + email);
 
-        // For regular users, redirect to login
-        // For admin-added users, redirect to user list
         if (request.getParameter("adminAction") != null) {
             response.sendRedirect("UserServlet?action=viewAll");
         } else {
@@ -290,39 +291,33 @@ public class UserServlet extends HttpServlet {
         String password = request.getParameter("password");
         String contactNumber = request.getParameter("contactNumber");
         boolean isAdmin = Boolean.parseBoolean(request.getParameter("isAdmin"));
-        String fromProfile = request.getParameter("fromProfile");
 
-        // Check if the new email is already taken by another user
-        User existingUser = userManager.getUserByEmail(email);
-        if (existingUser != null && !existingUser.getUserId().equals(userId)) {
-            request.setAttribute("error", "Email already exists");
-            request.getRequestDispatcher("editProfile.jsp").forward(request, response);
+        // Validate inputs
+        if (userId == null || name == null || email == null || contactNumber == null ||
+                userId.isEmpty() || name.isEmpty() || email.isEmpty() || contactNumber.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing required fields");
             return;
         }
 
-        // Get the current user to preserve the existing password if none provided
-        User currentUser = userManager.getUserById(userId);
-        if (currentUser == null) {
+        // Retrieve the existing user
+        User existingUser = userManager.getUserById(userId);
+        if (existingUser == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
             return;
         }
 
-        // Use existing password if none provided
-        String finalPassword = (password == null || password.trim().isEmpty()) ? currentUser.getPassword() : password;
+        // Use existing password if new password is empty or null
+        String updatedPassword = (password == null || password.isEmpty())
+                ? existingUser.getPassword()
+                : password;
 
-        User updatedUser = new User(userId, name, email, finalPassword, contactNumber, currentUser.getRegisteredDateTime());
+        User updatedUser = new User(userId, name, email, updatedPassword, contactNumber, existingUser.getRegisteredDateTime());
         updatedUser.setAdmin(isAdmin);
-        userManager.updateUser(updatedUser);
 
-        // Redirect based on context
-        User sessionUser = (User) request.getSession().getAttribute("user");
-        if ("true".equals(fromProfile) || (sessionUser != null && !sessionUser.isAdmin())) {
-            // Update session with new user details
-            request.getSession().setAttribute("user", updatedUser);
-            response.sendRedirect("userDashboard.jsp");
-        } else {
-            response.sendRedirect("UserServlet?action=viewAll");
-        }
+        userManager.updateUser(updatedUser);
+        LOGGER.info("Updated user: " + email + ", Password preserved: " + (password == null || password.isEmpty()));
+
+        response.sendRedirect("userDashboard.jsp");
     }
 
     private void authenticateUser(HttpServletRequest request, HttpServletResponse response)
@@ -330,10 +325,17 @@ public class UserServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
+        if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
+            request.setAttribute("error", "Email and password are required");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
+        }
+
         User user = userManager.authenticate(email, password);
 
         if (user != null) {
             request.getSession().setAttribute("user", user);
+            LOGGER.info("User logged in: " + email);
             if (user.isAdmin()) {
                 response.sendRedirect("adminDashboard.jsp");
             } else {
@@ -348,7 +350,10 @@ public class UserServlet extends HttpServlet {
     private void deleteUser(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         String userId = request.getParameter("userId");
-        userManager.deleteUser(userId);
+        if (userId != null) {
+            userManager.deleteUser(userId);
+            LOGGER.info("Deleted user with ID: " + userId);
+        }
         response.sendRedirect("UserServlet?action=viewAll");
     }
 
