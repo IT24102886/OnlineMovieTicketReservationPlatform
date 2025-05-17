@@ -11,46 +11,29 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+import com.google.gson.Gson;
 
 @WebServlet({"/movies/*", "/movies/data"})
 public class MovieServlet extends HttpServlet {
-    private static final String FILE_PATH = "/WEB-INF/classes/movies.txt";
+    private static final String FILE_PATH = "/WEB-INF/movies.txt";
 
     // Helper: Get real path to data file
     private String getRealPath(HttpServletRequest request) {
         return request.getServletContext().getRealPath(FILE_PATH);
     }
 
-    // GET: Handle movie listing or data file generation
+    // GET: Handle movie listing or data API
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
 
         if ("/data".equals(pathInfo)) {
-            // Generate movies-data.js
-            response.setContentType("application/javascript");
+            // Return movies as JSON
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
             List<Movie> movies = readMovies(request);
-            StringBuilder jsContent = new StringBuilder();
-            jsContent.append("const sampleMovies = [\n");
-            for (int i = 0; i < movies.size(); i++) {
-                Movie movie = movies.get(i);
-                jsContent.append("    {\n");
-                jsContent.append("        id: ").append(movie.getId()).append(",\n");
-                jsContent.append("        title: \"").append(movie.getTitle().replace("\"", "\\\"")).append("\",\n");
-                jsContent.append("        posterPath: \"").append(movie.getPosterPath().replace("\"", "\\\"")).append("\",\n");
-                jsContent.append("        releaseDate: \"").append(movie.getReleaseDate().toString()).append("\",\n");
-                jsContent.append("        runtime: ").append(movie.getDuration()).append(",\n");
-                jsContent.append("        voteAverage: ").append(movie.getVoteAverage()).append(",\n");
-                jsContent.append("        genres: [").append(Arrays.stream(movie.getGenres()).mapToObj(String::valueOf).collect(Collectors.joining(", "))).append("],\n");
-                jsContent.append("        overview: \"").append(movie.getOverview().replace("\"", "\\\"")).append("\"\n");
-                jsContent.append("    }");
-                if (i < movies.size() - 1) {
-                    jsContent.append(",");
-                }
-                jsContent.append("\n");
-            }
-            jsContent.append("];\n");
-            response.getWriter().write(jsContent.toString());
+            Gson gson = new Gson();
+            response.getWriter().write(gson.toJson(movies));
             return;
         }
 
@@ -185,7 +168,7 @@ public class MovieServlet extends HttpServlet {
     // Helper: Parse request body
     private Map<String, String> parseBody(HttpServletRequest request) throws IOException {
         String body = request.getReader().lines().collect(Collectors.joining());
-        return Arrays.stream(body.split("&"))
+               return Arrays.stream(body.split("&"))
                 .map(pair -> pair.split("="))
                 .collect(Collectors.toMap(
                         kv -> kv[0],
