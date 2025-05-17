@@ -1,3 +1,8 @@
-1|Inception|Sci-Fi|148|14:30|true|2020-07-17
-2|The Shawshank Redemption|Drama|142|18:00|true|1994-09-23
-3|The Dark Knight|Action|152|20:15|false|2008-07-18
+1|Lilo & Stitch|Comedy|135|18:00|true|2025-06-15|https://i.redd.it/lmw9lobh2n7e1.jpeg|8.7|35,878|A mysterious portal pulls four misfits into the Overworld, a bizarre, cubic wonderland that thrives on imagination.
+2|Thunderbolts*|Action|118|20:00|true|2025-05-02|https://image.tmdb.org/t/p/original/fvodooEJ74rXV9MfBM8asTGBv3Z.jpg|7.9|28,12|After finding themselves ensnared in a death trap, an unconventional team of antiheroes must embark on a dangerous mission that will force them to confront the darkest corners of their pasts.
+3|Moana 2|Family|105|14:00|true|2025-04-10|https://i0.wp.com/www.justaddcoloronline.com/wp-content/uploads/2024/05/Moana-2-Teaser-Poster-Movie-Database-May-29th-2024.jpg?w=970&ssl=1|6.8|10751,12|The sequel to the popular animated movie featuring Moana's new adventures.
+4|Sinners|Horror|125|22:00|true|2025-06-01|https://s3.amazonaws.com/nightjarprod/content/uploads/sites/130/2025/03/24184557/SNNRS_EM_VERT_DOM_TSR_1080x1920_NIRD_REV.jpg|7.2|27,12|A thrilling horror adventure that will keep you on the edge of your seat.
+5|F1|Action|0|16:00|true|2025-06-27|https://media.formula1.com/image/upload/t_16by9Centre/f_auto/q_auto/v1741890645/fom-website/2025/F1%20movie/f1_movie_poster16x9%20(1).jpg|0.0|28,0|An exciting movie about Formula 1 racing.
+6|Spider-Man: Brand New Day|Adventure|0|19:00|true|2025-07-31|https://m.media-amazon.com/images/M/MV5BOTkwZmNmOTYtYjY1Mi00YjkzLThmODQtZjgyZDk5ODliMDNiXkEyXkFqcGc@._V1_.jpg|0.0|12,28|The newest Spider-Man adventure featuring your favorite web-slinger.
+7|The Fantastic Four: First Steps|Sci-Fi|0|15:00|true|2025-07-25|https://lumiere-a.akamaihd.net/v1/images/12_blue_teaser2_4x5_ig_2609a9ad.jpeg?region=0,0,1080,1350|0.0|878,28|The origin story of Marvel's Fantastic Four.
+8|Avatar: Fire and Ash|Action|0|21:00|true|2025-12-19|https://m.media-amazon.com/images/M/MV5BYjE0OWZmYWMtZjBhMi00YzM5LTkzOTctOTZhMTIwNDcxY2U0XkEyXkFqcGc@._V1_.jpg|0.0|28,878|The next chapter in the Avatar saga.
