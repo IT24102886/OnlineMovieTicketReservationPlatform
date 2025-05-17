@@ -250,6 +250,9 @@
 
         .movie-actions {
             margin-top: auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .filters-section {
@@ -464,6 +467,13 @@
 <main class="movies-main">
     <section class="filters-section">
         <div class="container">
+            <c:if test="${sessionScope.user.role == 'admin'}">
+                <div class="row mb-3">
+                    <div class="col-12 text-center">
+                        <button class="btn btn-red" data-bs-toggle="modal" data-bs-target="#addMovieModal">Add New Movie</button>
+                    </div>
+                </div>
+            </c:if>
             <div class="row justify-content-center">
                 <div class="col-md-5 filter-group">
                     <label for="genre-filter"><i class="fas fa-tags me-2"></i> Genre:</label>
@@ -504,14 +514,67 @@
             <div id="now-playing-container" class="row"></div>
         </div>
     </section>
+    <!-- Coming Soon Section -->
+    <section class="py-5 bg-dark">
+        <div class="container">
+            <h2 class="section-title text-white">COMING SOON</h2>
+            <div id="coming-soon-container" class="row"></div>
+        </div>
+    </section>
 </main>
-<!-- Coming Soon Section -->
-<section class="py-5 bg-dark">
-    <div class="container">
-        <h2 class="section-title text-white">COMING SOON</h2>
-        <div id="coming-soon-container" class="row"></div>
+
+<!-- Add Movie Modal -->
+<div class="modal fade" id="addMovieModal" tabindex="-1" aria-labelledby="addMovieModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addMovieModalLabel">Add New Movie</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addMovieForm" action="${pageContext.request.contextPath}/movies" method="post">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="genre" class="form-label">Genre</label>
+                        <input type="text" class="form-control" id="genre" name="genre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="duration" class="form-label">Duration (minutes)</label>
+                        <input type="number" class="form-control" id="duration" name="duration" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="showtime" class="form-label">Showtime (e.g., 18:00)</label>
+                        <input type="text" class="form-control" id="showtime" name="showtime" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="releaseDate" class="form-label">Release Date</label>
+                        <input type="date" class="form-control" id="releaseDate" name="releaseDate" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="posterPath" class="form-label">Poster URL</label>
+                        <input type="url" class="form-control" id="posterPath" name="posterPath" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="voteAverage" class="form-label">Rating (0-10)</label>
+                        <input type="number" step="0.1" min="0" max="10" class="form-control" id="voteAverage" name="voteAverage" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="genres" class="form-label">Genres (comma-separated IDs, e.g., 28,12)</label>
+                        <input type="text" class="form-control" id="genres" name="genres" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="overview" class="form-label">Overview</label>
+                        <textarea class="form-control" id="overview" name="overview" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-red">Add Movie</button>
+                </form>
+            </div>
+        </div>
     </div>
-</section>
+</div>
 
 <!-- Footer -->
 <footer>
@@ -572,6 +635,6 @@
 
 <!-- Bootstrap 5 JS Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="script.js"></script>
+<script src="${pageContext.request.contextPath}/script.js"></script>
 </body>
 </html>
