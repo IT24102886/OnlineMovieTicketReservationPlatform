@@ -256,7 +256,9 @@
                     <a class="nav-link" href="viewMovies.jsp"><i class="fas fa-film me-1"></i> Movies</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="LoginServlet?action=logout"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
+                    <a class="nav-link" href="UserLogoutServlet">
+                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                    </a>
                 </li>
             </ul>
         </div>
