@@ -259,6 +259,7 @@
 
         .filter-group {
             margin-bottom: 1.5rem;
+            text-align: center;
         }
 
         .filter-group label {
@@ -463,8 +464,8 @@
 <main class="movies-main">
     <section class="filters-section">
         <div class="container">
-            <div class="row">
-                <div class="col-md-4 filter-group">
+            <div class="row justify-content-center">
+                <div class="col-md-5 filter-group">
                     <label for="genre-filter"><i class="fas fa-tags me-2"></i> Genre:</label>
                     <select id="genre-filter" class="filter-select form-select">
                         <option value="all">All Genres</option>
@@ -483,15 +484,9 @@
                         <option value="53">Thriller</option>
                     </select>
                 </div>
-                <div class="col-md-4 filter-group">
+                <div class="col-md-5 filter-group">
                     <label for="date-filter"><i class="far fa-calendar-alt me-2"></i> Date:</label>
                     <input type="date" id="date-filter" class="filter-input form-control">
-                </div>
-                <div class="col-md-4 filter-group">
-                    <label for="sort-filter"><i class="fas fa-sort me-2"></i> Sort By:</label>
-                    <select id="sort-filter" class="filter-select form-select">
-                        <option value="date">Release Date</option>
-                    </select>
                 </div>
             </div>
             <div class="row mt-3">
@@ -511,12 +506,12 @@
     </section>
 </main>
 <!-- Coming Soon Section -->
-    <section class="py-5 bg-dark">
-        <div class="container">
-            <h2 class="section-title text-white">COMING SOON</h2>
-            <div id="coming-soon-container" class="row"></div>
-        </div>
-    </section>
+<section class="py-5 bg-dark">
+    <div class="container">
+        <h2 class="section-title text-white">COMING SOON</h2>
+        <div id="coming-soon-container" class="row"></div>
+    </div>
+</section>
 
 <!-- Footer -->
 <footer>
