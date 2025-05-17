@@ -1,87 +1,3 @@
-// Updated movie data from index.jsp
-const sampleMovies = [
-    {
-        id: 1,
-        title: "Lilo & Stitch",
-        posterPath: "https://i.redd.it/lmw9lobh2n7e1.jpeg",
-        releaseDate: "2025-06-15",
-        runtime: 135, // 2h 15m in minutes
-        voteAverage: 8.7,
-        genres: [35, 878], // Comedy, Sci-Fi
-        overview: "A mysterious portal pulls four misfits into the Overworld, a bizarre, cubic wonderland that thrives on imagination."
-    },
-    {
-        id: 2,
-        title: "Thunderbolts*",
-        posterPath: "https://image.tmdb.org/t/p/original/fvodooEJ74rXV9MfBM8asTGBv3Z.jpg",
-        releaseDate: "2025-05-02",
-        runtime: 118, // 1h 58m in minutes
-        voteAverage: 7.9,
-        genres: [28, 12], // Action, Adventure
-        overview: "Ethan Hunt and the IMF team race against time to find the Entity, a rogue artificial intelligence that can destroy mankind."
-    },
-    {
-        id: 3,
-        title: "Moana 2",
-        posterPath: "https://i0.wp.com/www.justaddcoloronline.com/wp-content/uploads/2024/05/Moana-2-Teaser-Poster-Movie-Database-May-29th-2024.jpg?w=970&ssl=1",
-        releaseDate: "2025-04-10",
-        runtime: 105, // 1h 45m in minutes
-        voteAverage: 6.8,
-        genres: [10751, 12], // Family, Adventure
-        overview: "The sequel to the popular animated movie featuring Moana's new adventures."
-    },
-    {
-        id: 4,
-        title: "Sinners",
-        posterPath: "https://s3.amazonaws.com/nightjarprod/content/uploads/sites/130/2025/03/24184557/SNNRS_EM_VERT_DOM_TSR_1080x1920_NIRD_REV.jpg",
-        releaseDate: "2025-06-01",
-        runtime: 125, // 2h 05m in minutes
-        voteAverage: 7.2,
-        genres: [27, 12], // Horror, Adventure
-        overview: "A thrilling horror adventure that will keep you on the edge of your seat."
-    },
-    {
-        id: 5,
-        title: "F1",
-        posterPath: "https://media.formula1.com/image/upload/t_16by9Centre/f_auto/q_auto/v1741890645/fom-website/2025/F1%20movie/f1_movie_poster16x9%20(1).jpg",
-        releaseDate: "2025-06-27",
-        runtime: 0, // Runtime not specified
-        voteAverage: 0, // Rating not specified
-        genres: [28, 0], // Action, (Sports genre not in our map)
-        overview: "An exciting movie about Formula 1 racing."
-    },
-    {
-        id: 6,
-        title: "Spider-Man: Brand New Day",
-        posterPath: "https://m.media-amazon.com/images/M/MV5BOTkwZmNmOTYtYjY1Mi00YjkzLThmODQtZjgyZDk5ODliMDNiXkEyXkFqcGc@._V1_.jpg",
-        releaseDate: "2025-07-31",
-        runtime: 0, // Runtime not specified
-        voteAverage: 0, // Rating not specified
-        genres: [12, 28], // Adventure, Action
-        overview: "The newest Spider-Man adventure featuring your favorite web-slinger."
-    },
-    {
-        id: 7,
-        title: "The Fantastic Four: First Steps",
-        posterPath: "https://lumiere-a.akamaihd.net/v1/images/12_blue_teaser2_4x5_ig_2609a9ad.jpeg?region=0,0,1080,1350",
-        releaseDate: "2025-07-25",
-        runtime: 0, // Runtime not specified
-        voteAverage: 0, // Rating not specified
-        genres: [878, 28], // Sci-Fi, Action
-        overview: "The origin story of Marvel's Fantastic Four."
-    },
-    {
-        id: 8,
-        title: "Avatar: Fire and Ash",
-        posterPath: "https://m.media-amazon.com/images/M/MV5BYjE0OWZmYWMtZjBhMi00YzM5LTkzOTctOTZhMTIwNDcxY2U0XkEyXkFqcGc@._V1_.jpg",
-        releaseDate: "2025-12-19",
-        runtime: 0, // Runtime not specified
-        voteAverage: 0, // Rating not specified
-        genres: [28, 878], // Action, Sci-Fi
-        overview: "The next chapter in the Avatar saga."
-    }
-];
-
 // Genre mapping for display purposes
 const genreMap = {
     28: "Action",
@@ -101,15 +17,13 @@ const genreMap = {
     36: "History"
 };
 
+// Check if user is admin (set by JSP via script injection)
+const isAdmin = document.body.dataset.isAdmin === 'true';
+
 // Function to create HTML for a movie card
 function createMovieCard(movie) {
-    // Format date to display only the year
     const releaseYear = new Date(movie.releaseDate).getFullYear();
-
-    // Get primary genre name
     const primaryGenre = genreMap[movie.genres[0]] || "Unknown";
-
-    // Format runtime to hours and minutes if available
     let formattedRuntime = "N/A";
     if (movie.runtime > 0) {
         const hours = Math.floor(movie.runtime / 60);
@@ -117,7 +31,6 @@ function createMovieCard(movie) {
         formattedRuntime = `${hours}h ${minutes}m`;
     }
 
-    // Create HTML for the movie card
     return `
         <div class="col-md-6 col-lg-3 mb-4">
             <div class="movie-card animate__animated animate__fadeIn">
@@ -136,9 +49,13 @@ function createMovieCard(movie) {
                     <div class="movie-actions">
                         <a href="movieDetail.jsp?id=${movie.id}" class="btn btn-red btn-sm"><i class="fas fa-ticket-alt me-1"></i> Book Tickets</a>
                         <a href="movieDetail.jsp?id=${movie.id}" class="btn btn-outline-red btn-sm ms-2"><i class="fas fa-info-circle me-1"></i> Details</a>
+                        ${isAdmin ? `
+                            <button class="btn btn-outline-red btn-sm ms-2 edit-movie" data-id="${movie.id}" data-bs-toggle="modal" data-bs-target="#editMovieModal"><i class="fas fa-edit me-1"></i> Edit</button>
+                            <button class="btn btn-outline-red btn-sm ms-2 delete-movie" data-id="${movie.id}"><i class="fas fa-trash me-1"></i> Delete</button>
+                        ` : ''}
                     </div>
                 </div>
-            </div>
+                </div>
         </div>
     `;
 }
@@ -148,7 +65,6 @@ function displayMoviesBySections() {
     const nowPlayingContainer = document.getElementById('now-playing-container');
     const comingSoonContainer = document.getElementById('coming-soon-container');
 
-    // Show loading spinners
     const loadingHTML = `
         <div class="col-12">
             <div class="loading-spinner">
@@ -161,25 +77,19 @@ function displayMoviesBySections() {
     nowPlayingContainer.innerHTML = loadingHTML;
     comingSoonContainer.innerHTML = loadingHTML;
 
-    // Simulate API delay
     setTimeout(() => {
         const today = new Date();
-
-        // Sort movies by release date
         const sortedMovies = [...sampleMovies].sort((a, b) =>
             new Date(a.releaseDate) - new Date(b.releaseDate)
         );
 
-        // Split movies into now playing and coming soon
         const nowPlayingMovies = sortedMovies.filter(movie =>
             new Date(movie.releaseDate) <= today
         );
-
         const comingSoonMovies = sortedMovies.filter(movie =>
             new Date(movie.releaseDate) > today
         );
 
-        // Generate HTML for now playing movies
         let nowPlayingHTML = '';
         if (nowPlayingMovies.length > 0) {
             nowPlayingMovies.forEach(movie => {
@@ -196,7 +106,6 @@ function displayMoviesBySections() {
             `;
         }
 
-        // Generate HTML for coming soon movies
         let comingSoonHTML = '';
         if (comingSoonMovies.length > 0) {
             comingSoonMovies.forEach(movie => {
@@ -213,10 +122,9 @@ function displayMoviesBySections() {
             `;
         }
 
-        // Update the containers with movie cards
         nowPlayingContainer.innerHTML = nowPlayingHTML;
         comingSoonContainer.innerHTML = comingSoonHTML;
-    }, 800); // Simulate loading delay
+    }, 800);
 }
 
 // Function to apply filters to both sections
@@ -227,7 +135,6 @@ function applyFilters() {
     const nowPlayingContainer = document.getElementById('now-playing-container');
     const comingSoonContainer = document.getElementById('coming-soon-container');
 
-    // Show loading spinners
     const loadingHTML = `
         <div class="col-12">
             <div class="loading-spinner">
@@ -240,19 +147,16 @@ function applyFilters() {
     nowPlayingContainer.innerHTML = loadingHTML;
     comingSoonContainer.innerHTML = loadingHTML;
 
-    // Simulate API delay
     setTimeout(() => {
         const today = new Date();
         let filteredMovies = [...sampleMovies];
 
-        // Apply genre filter if selected
         if (genreFilter && genreFilter !== 'all') {
             filteredMovies = filteredMovies.filter(movie =>
                 movie.genres.includes(parseInt(genreFilter))
             );
         }
 
-        // Apply date filter if selected
         if (dateFilter) {
             const filterDate = new Date(dateFilter);
             filteredMovies = filteredMovies.filter(movie => {
@@ -261,16 +165,13 @@ function applyFilters() {
             });
         }
 
-        // Split filtered movies into now playing and coming soon
         const nowPlayingMovies = filteredMovies.filter(movie =>
             new Date(movie.releaseDate) <= today
         );
-
         const comingSoonMovies = filteredMovies.filter(movie =>
             new Date(movie.releaseDate) > today
         );
 
-        // Generate HTML for now playing movies
         let nowPlayingHTML = '';
         if (nowPlayingMovies.length > 0) {
             nowPlayingMovies.forEach(movie => {
@@ -287,7 +188,6 @@ function applyFilters() {
             `;
         }
 
-        // Generate HTML for coming soon movies
         let comingSoonHTML = '';
         if (comingSoonMovies.length > 0) {
             comingSoonMovies.forEach(movie => {
@@ -304,37 +204,116 @@ function applyFilters() {
             `;
         }
 
-        // Update the containers with movie cards
         nowPlayingContainer.innerHTML = nowPlayingHTML;
         comingSoonContainer.innerHTML = comingSoonHTML;
-    }, 800); // Simulate loading delay
+    }, 800);
 }
 
 // Function to clear all filters
 function clearFilters() {
-    document.getElementById('genre-filter').value = 'all';
-    document.getElementById('date-filter').value = '';
+    const genreFilter = document.getElementById('genre-filter');
+    const dateFilter = document.getElementById('date-filter');
+    if (genreFilter) genreFilter.value = 'all';
+    if (dateFilter) dateFilter.value = '';
 }
 
-// Event listeners for filter actions
-document.getElementById('apply-filters').addEventListener('click', () => {
-    applyFilters();
-});
+// Function to populate edit modal with movie data
+function populateEditModal(movieId) {
+    const movie = sampleMovies.find(m => m.id === parseInt(movieId));
+    if (!movie) return;
 
-document.getElementById('clear-filters').addEventListener('click', () => {
-    clearFilters();
-    displayMoviesBySections();
-});
+    document.getElementById('editMovieId').value = movie.id;
+    document.getElementById('editTitle').value = movie.title;
+    document.getElementById('editGenre').value = movie.genres.map(id => genreMap[id] || 'Unknown').join(', ');
+    document.getElementById('editDuration').value = movie.runtime;
+    document.getElementById('editShowtime').value = movie.showtime || '';
+    document.getElementById('editReleaseDate').value = movie.releaseDate;
+    document.getElementById('editPosterPath').value = movie.posterPath;
+    document.getElementById('editVoteAverage').value = movie.voteAverage;
+    document.getElementById('editGenres').value = movie.genres.join(',');
+    document.getElementById('editOverview').value = movie.overview;
+}
 
-// Initialize: Load movies when page loads
+// Event listeners
 document.addEventListener('DOMContentLoaded', () => {
-    // Display movies in their respective sections
+    const applyFiltersBtn = document.getElementById('apply-filters');
+    const clearFiltersBtn = document.getElementById('clear-filters');
+    const dateFilter = document.getElementById('date-filter');
+
+    if (applyFiltersBtn) {
+        applyFiltersBtn.addEventListener('click', () => {
+            applyFilters();
+        });
+    }
+
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', () => {
+            clearFilters();
+            displayMoviesBySections();
+        });
+    }
+
     displayMoviesBySections();
 
-    // Set default date to today
-    const today = new Date();
-    const formattedDate = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-    document.getElementById('date-filter').value = formattedDate;
+    if (dateFilter) {
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0];
+        dateFilter.value = formattedDate;
+    }
+
+    // Admin edit/delete event listeners
+    if (isAdmin) {
+        document.addEventListener('click', async (e) => {
+            if (e.target.closest('.edit-movie')) {
+                const movieId = e.target.closest('.edit-movie').dataset.id;
+                populateEditModal(movieId);
+            } else if (e.target.closest('.delete-movie')) {
+                const movieId = e.target.closest('.delete-movie').dataset.id;
+                if (confirm('Are you sure you want to delete this movie?')) {
+                    try {
+                        const response = await fetch(`/movies/${movieId}`, {
+                            method: 'DELETE'
+                        });
+                        if (response.ok) {
+                            alert('Movie deleted successfully');
+                            window.location.reload(); // Reload to refresh movie list
+                        } else {
+                            alert('Failed to delete movie');
+                        }
+                    } catch (error) {
+                        alert('Error deleting movie: ' + error.message);
+                    }
+                }
+            }
+        });
+
+        // Handle edit form submission
+        const editMovieForm = document.getElementById('editMovieForm');
+        if (editMovieForm) {
+            editMovieForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(editMovieForm);
+                const data = {};
+                formData.forEach((value, key) => { data[key] = value; });
+
+                try {
+                    const response = await fetch('/movies', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams(data).toString()
+                    });
+                    if (response.ok) {
+                        alert('Movie updated successfully');
+                        window.location.reload();
+                    } else {
+                        alert('Failed to update movie');
+                    }
+                } catch (error) {
+                    alert('Error updating movie: ' + error.message);
+                }
+            });
+        }
+    }
 });
 
 // Smooth scrolling for anchor links
