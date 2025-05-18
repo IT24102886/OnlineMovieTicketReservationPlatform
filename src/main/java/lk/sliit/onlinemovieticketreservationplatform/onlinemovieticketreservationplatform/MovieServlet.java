@@ -168,7 +168,7 @@ public class MovieServlet extends HttpServlet {
     // Helper: Parse request body
     private Map<String, String> parseBody(HttpServletRequest request) throws IOException {
         String body = request.getReader().lines().collect(Collectors.joining());
-               return Arrays.stream(body.split("&"))
+        return Arrays.stream(body.split("&"))
                 .map(pair -> pair.split("="))
                 .collect(Collectors.toMap(
                         kv -> kv[0],
