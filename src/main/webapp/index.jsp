@@ -289,18 +289,18 @@
       font-weight: bold;
     }
 
-    .profile-section {
-      background-color: var(--secondary-black);
-      padding: 2rem;
-      border-radius: 10px;
-      margin: 2rem 0;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
+    /*.profile-section {*/
+    /*  background-color: var(--secondary-black);*/
+    /*  padding: 2rem;*/
+    /*  border-radius: 10px;*/
+    /*  margin: 2rem 0;*/
+    /*  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);*/
+    /*}*/
 
-    .profile-header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
+    /*.profile-header {*/
+    /*  text-align: center;*/
+    /*  margin-bottom: 2rem;*/
+    /*}*/
 
     .profile-header h2 {
       color: var(--white);
@@ -428,17 +428,17 @@
     }
 
     /*editors pick section*/
-    .featured-badge {
-      background-color: var(--accent-cyan);
-      color: var(--primary-black);
-      padding: 5px 15px;
-      border-radius: 30px;
-      font-weight: bold;
-      display: inline-block;
-      margin-bottom: 15px;
-      text-transform: uppercase;
-      font-size: 0.9rem;
-    }
+    /*.featured-badge {*/
+    /*  background-color: var(--accent-cyan);*/
+    /*  color: var(--primary-black);*/
+    /*  padding: 5px 15px;*/
+    /*  border-radius: 30px;*/
+    /*  font-weight: bold;*/
+    /*  display: inline-block;*/
+    /*  margin-bottom: 15px;*/
+    /*  text-transform: uppercase;*/
+    /*  font-size: 0.9rem;*/
+    /*}*/
 
     .featured-movie {
       position: relative;
@@ -757,7 +757,7 @@
               <p class="hero-subtitle">Ethan Hunt and the IMF team race against time to find the Entity, a rogue artificial intelligence that can destroy mankind.</p>
               <div class="d-flex flex-wrap gap-3">
                 <a href="#" class="btn btn-red pulse-animation"><i class="fas fa-ticket-alt me-2"></i> BUY TICKETS</a>
-                <a href="#" class="btn btn-outline-red"><i class="fas fa-play-circle me-2"></i> WATCH TRAILER</a>
+                <a href="https://youtu.be/fsQgc9pCyDU?si=tdItr4vyNnccASZA" class="btn btn-outline-red"><i class="fas fa-play-circle me-2"></i> WATCH TRAILER</a>
               </div>
             </div>
           </div>
@@ -791,7 +791,7 @@
               <p class="hero-subtitle">Catch the explosive action now! Thunderbolts brings a rogue team of antiheroes to life on the big screen.</p>
               <div class="d-flex flex-wrap gap-3">
                 <a href="#" class="btn btn-red pulse-animation"><i class="fas fa-ticket-alt me-2"></i> BUY TICKETS</a>
-                <a href="#" class="btn btn-outline-red"><i class="fas fa-play-circle me-2"></i> WATCH TRAILER</a>
+                <a href="https://youtu.be/v-94Snw-H4o?si=hu5IOIDLSoT5HgdR" class="btn btn-outline-red"><i class="fas fa-play-circle me-2"></i> WATCH TRAILER</a>
               </div>
             </div>
           </div>
@@ -825,7 +825,7 @@
         <p style="max-width: 600px; margin-bottom: 20px; color: var(--white);">A mysterious portal pulls four misfits into the Overworld, a bizarre, cubic wonderland that thrives on imagination. To get back home, they'll have to master the terrain while embarking on a magical quest with an unexpected crafter named Steve.</p>
         <div class="d-flex flex-wrap gap-3">
           <a href="#" class="btn btn-red"><i class="fas fa-ticket-alt me-2"></i> GET TICKETS</a>
-          <a href="#" class="btn btn-outline-red"><i class="fas fa-play-circle me-2"></i> WATCH TRAILER</a>
+          <a href="https://youtu.be/8B1EtVPBSMw?si=-S_mggg1N3JA7dLl" class="btn btn-outline-red"><i class="fas fa-play-circle me-2"></i> WATCH TRAILER</a>
         </div>
       </div>
     </div>
