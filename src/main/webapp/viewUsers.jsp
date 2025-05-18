@@ -311,7 +311,7 @@
                             <option value="UserServlet?action=sortByDate" ${param.action == 'sortByDate' ? 'selected' : ''}>Sort by Date</option>
                             <option value="UserServlet?action=sortByName" ${param.action == 'sortByName' ? 'selected' : ''}>Sort by Name</option>
                         </select>
-                        <a href="addUser.jsp" class="btn btn-red">
+                        <a href="register.jsp" class="btn btn-red">
                             <i class="fas fa-user-plus me-1"></i> ADD USER
                         </a>
                     </div>
@@ -343,12 +343,12 @@
                                 <td>${user.contactNumber}</td>
                                 <td>${user.registeredDateTime}</td>
                                 <td class="action-buttons">
-                                    <a href="UserServlet?action=viewProfile&userId=${user.userId}" class="btn btn-outline-red me-1">
-                                        <i class="fas fa-eye"></i> VIEW
-                                    </a>
-                                    <a href="editUser.jsp?userId=${user.userId}" class="btn btn-outline-red me-1">
-                                        <i class="fas fa-edit"></i> EDIT
-                                    </a>
+<%--                                    <a href="UserServlet?action=viewProfile&userId=${user.userId}" class="btn btn-outline-red me-1">--%>
+<%--                                        <i class="fas fa-eye"></i> VIEW--%>
+<%--                                    </a>--%>
+<%--                                    <a href="editUser.jsp?userId=${user.userId}" class="btn btn-outline-red me-1">--%>
+<%--                                        <i class="fas fa-edit"></i> EDIT--%>
+<%--                                    </a>--%>
                                     <a href="UserServlet?action=delete&userId=${user.userId}"
                                        class="btn btn-outline-red"
                                        onclick="return confirm('Are you sure you want to delete this user?')">
