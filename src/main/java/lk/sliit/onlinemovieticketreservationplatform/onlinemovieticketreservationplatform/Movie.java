@@ -35,6 +35,7 @@ public class Movie {
 
     // Getters & Setters
     public int getId() { return id; }
+    public void setId(int id) { this.id = id; } // Added setter for id
     public String getTitle() { return title; }
     public String getGenre() { return genre; }
     public int getDuration() { return duration; }
