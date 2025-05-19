@@ -1,0 +1,6 @@
+0:0:0:0:0:0:0:1 - - [21/May/2025:15:58:02 +0530] "GET /OnlineMovieTicketReservationPlatform HTTP/1.1" 302 -
+0:0:0:0:0:0:0:1 - - [21/May/2025:15:58:02 +0530] "GET /OnlineMovieTicketReservationPlatform/ HTTP/1.1" 404 792
+0:0:0:0:0:0:0:1 - - [21/May/2025:15:58:02 +0530] "GET /favicon.ico HTTP/1.1" 404 682
+0:0:0:0:0:0:0:1 - - [21/May/2025:15:58:16 +0530] "GET /OnlineMovieTicketReservationPlatform HTTP/1.1" 302 -
+0:0:0:0:0:0:0:1 - - [21/May/2025:15:58:16 +0530] "GET /OnlineMovieTicketReservationPlatform/ HTTP/1.1" 404 792
+0:0:0:0:0:0:0:1 - - [21/May/2025:15:58:16 +0530] "GET /favicon.ico HTTP/1.1" 404 682

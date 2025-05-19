@@ -1,0 +1,4 @@
+grant codeBase "file:${catalina.base}/webapps/OnlineMovieTicketReservationPlatform/-" {
+    permission java.io.FilePermission "${catalina.base}${file.separator}webapps${file.separator}OnlineMovieTicketReservationPlatform${file.separator}WEB-INF${file.separator}feedback${file.separator}-", "read,write,delete";
+    permission java.io.FilePermission "${catalina.base}${file.separator}webapps${file.separator}OnlineMovieTicketReservationPlatform${file.separator}WEB-INF${file.separator}feedback", "read,write,delete";
+}; 
