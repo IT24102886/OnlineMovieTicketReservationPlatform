@@ -319,6 +319,49 @@
             </div>
         </div>
 
+<%--        <div class="table-container">--%>
+<%--            <div class="table-responsive">--%>
+<%--                <c:if test="${empty users}">--%>
+<%--                    <p class="text-center text-danger p-3">No users found or error reading users.txt.</p>--%>
+<%--                </c:if>--%>
+<%--                <c:if test="${not empty users}">--%>
+<%--                    <table class="table table-hover mb-0">--%>
+<%--                        <thead>--%>
+<%--                        <tr>--%>
+<%--                            <th>NAME</th>--%>
+<%--                            <th>EMAIL</th>--%>
+<%--                            <th>CONTACT</th>--%>
+<%--                            <th>REGISTERED DATE</th>--%>
+<%--                            <th>ACTIONS</th>--%>
+<%--                        </tr>--%>
+<%--                        </thead>--%>
+<%--                        <tbody>--%>
+<%--                        <c:forEach var="user" items="${users}">--%>
+<%--                            <tr>--%>
+<%--                                <td>${user.name}</td>--%>
+<%--                                <td>${user.email}</td>--%>
+<%--                                <td>${user.contactNumber}</td>--%>
+<%--                                <td>${user.registeredDateTime}</td>--%>
+<%--                                <td class="action-buttons">--%>
+<%--&lt;%&ndash;                                    <a href="UserServlet?action=viewProfile&userId=${user.userId}" class="btn btn-outline-red me-1">&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                        <i class="fas fa-eye"></i> VIEW&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                    </a>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                    <a href="editUser.jsp?userId=${user.userId}" class="btn btn-outline-red me-1">&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                        <i class="fas fa-edit"></i> EDIT&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                    </a>&ndash;%&gt;--%>
+<%--                                    <a href="UserServlet?action=delete&userId=${user.userId}"--%>
+<%--                                       class="btn btn-outline-red"--%>
+<%--                                       onclick="return confirm('Are you sure you want to delete this user?')">--%>
+<%--                                        <i class="fas fa-trash-alt"></i> DELETE--%>
+<%--                                    </a>--%>
+<%--                                </td>--%>
+<%--                            </tr>--%>
+<%--                        </c:forEach>--%>
+<%--                        </tbody>--%>
+<%--                    </table>--%>
+<%--                </c:if>--%>
+<%--            </div>--%>
+<%--        </div>--%>
         <div class="table-container">
             <div class="table-responsive">
                 <c:if test="${empty users}">
@@ -343,12 +386,12 @@
                                 <td>${user.contactNumber}</td>
                                 <td>${user.registeredDateTime}</td>
                                 <td class="action-buttons">
-<%--                                    <a href="UserServlet?action=viewProfile&userId=${user.userId}" class="btn btn-outline-red me-1">--%>
-<%--                                        <i class="fas fa-eye"></i> VIEW--%>
-<%--                                    </a>--%>
-<%--                                    <a href="editUser.jsp?userId=${user.userId}" class="btn btn-outline-red me-1">--%>
-<%--                                        <i class="fas fa-edit"></i> EDIT--%>
-<%--                                    </a>--%>
+                                    <a href="ViewUserServlet?userId=${user.userId}" class="btn btn-outline-red me-1">
+                                        <i class="fas fa-eye"></i> VIEW
+                                    </a>
+                                    <a href="EditUserServlet?userId=${user.userId}" class="btn btn-outline-red me-1">
+                                        <i class="fas fa-edit"></i> EDIT
+                                    </a>
                                     <a href="UserServlet?action=delete&userId=${user.userId}"
                                        class="btn btn-outline-red"
                                        onclick="return confirm('Are you sure you want to delete this user?')">
