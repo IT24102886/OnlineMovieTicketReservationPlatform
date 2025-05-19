@@ -217,7 +217,7 @@
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link active" href="userDashboard.jsp">
-                            <i class="fas fa-tachometer-alt me-2"></i> My Profile
+                            <i class="fas fa-user me-2"></i> My Profile
                         </a>
                     </li>
                     <li class="nav-item">
@@ -236,8 +236,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="userProfile.jsp">
-                            <i class="fas fa-user me-2"></i> Give Feedback
+                        <a class="nav-link" href="feedback.jsp">
+                            <i class="fas fa-comment-dots me-2"></i> Give Feedback
                         </a>
                     </li>
                     <li class="nav-item mt-4">
