@@ -308,43 +308,71 @@
 
     <div class="row g-4">
         <!-- Users Card -->
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <div class="card-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h3 class="card-title">USERS</h3>
-                    <p class="card-text">Manage user accounts and admin approvals</p>
-                    <a href="viewUsers.jsp" class="btn btn-red mt-3">
-                        <i class="fas fa-users me-1"></i> VIEW USERS
-                    </a>
-                </div>
-            </div>
-        </div>
 
-        <!-- Movies Card -->
+
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body text-center">
                     <div class="card-icon">
                         <i class="fas fa-film"></i>
                     </div>
-                    <h3 class="card-title">MOVIES</h3>
+                    <h3 class="card-title">USERS</h3>
                     <p class="card-text">Create, edit, and manage all movies</p>
                     <div class="d-grid gap-3 mt-3">
-                        <a href="viewMovies.jsp" class="btn btn-red">
-                            <i class="fas fa-film me-1"></i> VIEW MOVIES
+                        <a href="viewUsers.jsp" class="btn btn-red">
+                            <i class="fas fa-film me-1"></i> VIEW USERS
                         </a>
-                        <a href="addMovie.jsp" class="btn btn-outline-red">
-                            <i class="fas fa-plus me-1"></i> ADD NEW MOVIE
+                        <a href="register.jsp" class="btn btn-outline-red">
+                            <i class="fas fa-plus me-1"></i> ADD NEW USER
                         </a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Showtimes Card -->
+
+        <!-- Movies Card -->
+<%--        <div class="col-md-4">--%>
+<%--            <div class="card">--%>
+<%--                <div class="card-body text-center">--%>
+<%--                    <div class="card-icon">--%>
+<%--                        <i class="fas fa-film"></i>--%>
+<%--                    </div>--%>
+<%--                    <h3 class="card-title">MOVIES</h3>--%>
+<%--                    <p class="card-text">Create, edit, and manage all movies</p>--%>
+<%--                    <div class="d-grid gap-3 mt-3">--%>
+<%--                        <a href="viewMovies.jsp" class="btn btn-red">--%>
+<%--                            <i class="fas fa-film me-1"></i> VIEW MOVIES--%>
+<%--                        </a>--%>
+<%--                        <a href="addMovie.jsp" class="btn btn-outline-red">--%>
+<%--                            <i class="fas fa-plus me-1"></i> ADD NEW MOVIE--%>
+<%--                        </a>--%>
+<%--                    </div>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
+
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="card-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3 class="card-title">MOVIES</h3>
+                        <p class="card-text">Create, edit, and manage all movies</p>
+                        <div class="d-grid gap-3 mt-3">
+                            <a href="viewMovies.jsp" class="btn btn-red">
+                                <i class="fas fa-map-marker-alt me-1"></i> VIEW MOVIES
+                            </a>
+                            <a href="addMovie.jsp" class="btn btn-outline-red">
+                                <i class="fas fa-plus me-1"></i>  ADD NEW MOVIE
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body text-center">
@@ -364,6 +392,10 @@
                 </div>
             </div>
         </div>
+        </div>
+
+        <!-- Showtimes Card -->
+
     </div>
 
     <!-- Quick Actions Row -->

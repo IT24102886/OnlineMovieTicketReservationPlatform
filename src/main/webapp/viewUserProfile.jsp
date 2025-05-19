@@ -242,10 +242,10 @@
                     <i class="fas fa-calendar-alt info-icon"></i>
                     <p><strong>Registered Date:</strong> ${profileUser.registeredDateTime}</p>
                 </div>
-                <div class="info-group">
-                    <i class="fas fa-shield-alt info-icon"></i>
-                    <p><strong>Admin Status:</strong> ${profileUser.admin ? 'Yes' : 'No'}</p>
-                </div>
+<%--                <div class="info-group">--%>
+<%--                    <i class="fas fa-shield-alt info-icon"></i>--%>
+<%--                    <p><strong>Admin Status:</strong> ${profileUser.admin ? 'Yes' : 'No'}</p>--%>
+<%--                </div>--%>
             </div>
 
             <!-- Recent Bookings -->

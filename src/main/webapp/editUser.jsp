@@ -219,15 +219,15 @@
                         <input type="password" class="form-control" id="password" name="password" placeholder="Enter new password">
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label for="isAdmin" class="form-label">Admin Status</label>
-                    <div class="input-group">
-                        <i class="fas fa-shield-alt input-icon"></i>
-                        <select class="form-control" id="isAdmin" name="isAdmin">
-                            <option value="true" ${user.admin ? 'selected' : ''}>Yes</option>
-                            <option value="false" ${!user.admin ? 'selected' : ''}>No</option>
-                        </select>
-                    </div>
+<%--                <div class="mb-3">--%>
+<%--                    <label for="isAdmin" class="form-label">Admin Status</label>--%>
+<%--                    <div class="input-group">--%>
+<%--                        <i class="fas fa-shield-alt input-icon"></i>--%>
+<%--                        <select class="form-control" id="isAdmin" name="isAdmin">--%>
+<%--                            <option value="true" ${user.admin ? 'selected' : ''}>Yes</option>--%>
+<%--                            <option value="false" ${!user.admin ? 'selected' : ''}>No</option>--%>
+<%--                        </select>--%>
+<%--                    </div>--%>
                 </div>
                 <button type="submit" class="btn btn-red"><i class="fas fa-save me-2"></i> Save Changes</button>
                 <a href="UserServlet?action=viewAll" class="btn btn-outline-red"><i class="fas fa-arrow-left me-2"></i> Cancel</a>
