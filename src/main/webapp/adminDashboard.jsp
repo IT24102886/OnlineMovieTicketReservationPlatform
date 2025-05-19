@@ -355,7 +355,7 @@
                     <p class="card-text">Add and manage movie locations</p>
                     <div class="d-grid gap-3 mt-3">
                         <a href="locations.jsp" class="btn btn-red">
-                            <i class="fas fa-clock me-1"></i> VIEW LOCATIONS
+                            <i class="fas fa-map-marker-alt me-1"></i> VIEW LOCATIONS
                         </a>
                         <a href="locations.jsp" class="btn btn-outline-red">
                             <i class="fas fa-plus me-1"></i> ADD NEW SHOWTIME
@@ -371,7 +371,7 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title"><i class="fas fa-user-edit me-2"></i>QUICK ACTIONS</h4>
+                    <h4 class="card-title"><i class="fas fa-bolt me-2"></i>QUICK ACTIONS</h4>
                     <div class="d-grid gap-3 mt-3">
                         <a href="feedback.jsp" class="btn btn-outline-red">
                             <i class="fas fa-user-plus me-1"></i> REVIEW FEEDBACK
