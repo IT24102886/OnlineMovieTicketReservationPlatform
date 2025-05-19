@@ -20,7 +20,7 @@ public class EditFeedbackServlet extends HttpServlet {
 
         if (user == null) {
             response.sendRedirect("login.jsp");
-            return;
+            return; 
         }
 
         String entryNumberStr = request.getParameter("entryNumber");
