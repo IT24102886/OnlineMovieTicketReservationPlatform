@@ -1,178 +1,138 @@
 package lk.sliit.onlinemovieticketreservationplatform.onlinemovieticketreservationplatform;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
-import com.google.gson.Gson;
 
-@WebServlet({"/movies/*", "/movies/data"})
+@WebServlet(name = "MovieServlet", urlPatterns = {"/MovieServlet"})
 public class MovieServlet extends HttpServlet {
-    private static final String FILE_PATH = "/WEB-INF/movies.txt";
+    private MovieManager movieManager;
 
-    // Helper: Get real path to data file
-    private String getRealPath(HttpServletRequest request) {
-        return request.getServletContext().getRealPath(FILE_PATH);
+    @Override
+    public void init() throws ServletException {
+        movieManager = new MovieManager();
     }
 
-    // GET: Handle movie listing or data API
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String pathInfo = request.getPathInfo();
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+        String genre = request.getParameter("genre");
+        String sort = request.getParameter("sort");
 
-        if ("/data".equals(pathInfo)) {
-            // Return movies as JSON
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            List<Movie> movies = readMovies(request);
-            Gson gson = new Gson();
-            response.getWriter().write(gson.toJson(movies));
+        if ("get".equals(action)) {
+            // Handle single movie fetch for edit
+            int id = Integer.parseInt(request.getParameter("id"));
+            Movie movie = movieManager.getMovies().stream()
+                    .filter(m -> m.getId() == id)
+                    .findFirst()
+                    .orElse(null);
+            if (movie != null) {
+                response.setContentType("text/plain");
+                response.getWriter().write(String.format(
+                        "%d,%s,%s,%s,%s,%s",
+                        movie.getId(), movie.getTitle(), movie.getGenre(), movie.getReleaseDate(), movie.getStatus(), movie.getPosterLink()
+                ));
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            }
             return;
         }
 
-        // Existing GET logic for listing movies
-        List<Movie> movies = readMovies(request);
-
-        // Search functionality
-        String searchTerm = request.getParameter("search");
-        if (searchTerm != null && !searchTerm.isEmpty()) {
-            String searchType = request.getParameter("searchType");
-            movies = filterMovies(movies, searchTerm, searchType);
+        // Handle sorting
+        if (sort != null) {
+            movieManager.sortMoviesByReleaseDate("asc".equals(sort));
         }
 
-        // Sort movies by release date
-        Movie[] moviesArray = movies.toArray(new Movie[0]);
-        Movie.sortByReleaseDate(moviesArray);
-        movies = Arrays.asList(moviesArray);
+        // Handle filtering by genre
+        List<Movie> movies = genre != null ? movieManager.getMoviesByGenre(genre) : movieManager.getMovies();
 
-        request.setAttribute("movies", movies);
-        request.getRequestDispatcher("/movies.jsp").forward(request, response);
+        // Separate movies by status
+        List<Movie> currentMovies = movies.stream()
+                .filter(m -> m instanceof CurrentMovie)
+                .collect(Collectors.toList());
+        List<Movie> upcomingMovies = movies.stream()
+                .filter(m -> m instanceof UpcomingMovie)
+                .collect(Collectors.toList());
+
+        // Generate HTML response for movie lists
+        response.setContentType("text/html");
+        StringBuilder html = new StringBuilder();
+
+        // Now Showing Section
+        html.append("<div id='current-movies' class='mb-5'>");
+        for (Movie movie : currentMovies) {
+            html.append(generateMovieCard(movie));
+        }
+        html.append("</div>");
+
+        // Coming Soon Section
+        html.append("<div id='upcoming-movies'>");
+        for (Movie movie : upcomingMovies) {
+            html.append(generateMovieCard(movie));
+        }
+        html.append("</div>");
+
+        response.getWriter().write(html.toString());
     }
 
-    // POST: Add new movie
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String genresStr = request.getParameter("genres");
-        int[] genres = genresStr != null ? Arrays.stream(genresStr.split(","))
-                .mapToInt(Integer::parseInt).toArray() : new int[]{0};
-
-        Movie movie = new Movie(
-                generateId(request),
-                request.getParameter("title"),
-                request.getParameter("genre"),
-                Integer.parseInt(request.getParameter("duration")),
-                request.getParameter("showtime"),
-                LocalDate.parse(request.getParameter("releaseDate")),
-                request.getParameter("posterPath"),
-                Double.parseDouble(request.getParameter("voteAverage")),
-                genres,
-                request.getParameter("overview")
-        );
-
-        List<Movie> movies = readMovies(request);
-        movies.add(movie);
-        writeMovies(movies, request);
-        response.sendRedirect(request.getContextPath() + "/movies");
+    private String generateMovieCard(Movie movie) {
+        String cardClass = movie instanceof CurrentMovie ? "current" : "upcoming";
+        return "<div class='col-lg-3 col-md-6'>" +
+                "<div class='movie-card " + cardClass + "'>" +
+                "<img src='" + movie.getPosterLink() + "' class='movie-poster' alt='" + movie.getTitle() + " Poster'>" +
+                "<div class='movie-info'>" +
+                "<h3 class='movie-title'>" + movie.getTitle() + "</h3>" +
+                "<div class='movie-meta'>" +
+                "<span>" + movie.displayDetails() + "</span>" +
+                "</div>" +
+                "<span class='movie-badge'>" + movie.getGenre() + "</span>" +
+                "<span class='movie-badge'>" + movie.getStatus() + "</span>" +
+                "<div class='mt-3'>" +
+                "<button class='btn btn-red btn-sm me-2' onclick='editMovie(" + movie.getId() + ")'><i class='fas fa-edit me-1'></i> Edit</button>" +
+                "<button class='btn btn-outline-red btn-sm' onclick='deleteMovie(" + movie.getId() + ")'><i class='fas fa-trash me-1'></i> Delete</button>" +
+                "</div>" +
+                "</div>" +
+                "</div>" +
+                "</div>";
     }
 
-    // PUT: Update movie
-    protected void doPut(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        Map<String, String> params = parseBody(request);
-        List<Movie> movies = readMovies(request);
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
 
-        int id = Integer.parseInt(params.get("id"));
-        for (Movie m : movies) {
-            if (m.getId() == id) {
-                m.setTitle(params.get("title"));
-                m.setGenre(params.get("genre"));
-                m.setDuration(Integer.parseInt(params.get("duration")));
-                m.setShowtime(params.get("showtime"));
-                m.setAvailable(Boolean.parseBoolean(params.get("available")));
-                m.setReleaseDate(LocalDate.parse(params.get("releaseDate")));
-                m.setPosterPath(params.get("posterPath"));
-                m.setVoteAverage(Double.parseDouble(params.get("voteAverage")));
-                String genresStr = params.get("genres");
-                int[] genres = genresStr != null ? Arrays.stream(genresStr.split(","))
-                        .mapToInt(Integer::parseInt).toArray() : new int[]{0};
-                m.setGenres(genres);
-                m.setOverview(params.get("overview"));
-                writeMovies(movies, request);
-                response.setStatus(HttpServletResponse.SC_OK);
-                return;
+        if ("add".equals(action) || "update".equals(action)) {
+            int id = "update".equals(action) ? Integer.parseInt(request.getParameter("id")) : 0;
+            String title = request.getParameter("title");
+            String genre = request.getParameter("genre");
+            LocalDate releaseDate = LocalDate.parse(request.getParameter("release-date"));
+            String status = request.getParameter("status");
+            String posterLink = request.getParameter("poster-link");
+
+            Movie movie;
+            if ("Upcoming".equals(status)) {
+                movie = new UpcomingMovie(id, title, genre, releaseDate, posterLink);
+            } else {
+                movie = new CurrentMovie(id, title, genre, releaseDate, posterLink);
             }
+
+            if ("add".equals(action)) {
+                movieManager.addMovie(movie);
+            } else {
+                movieManager.updateMovie(id, movie);
+            }
+        } else if ("delete".equals(action)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            movieManager.deleteMovie(id);
         }
-        response.sendError(HttpServletResponse.SC_NOT_FOUND, "Movie not found");
-    }
 
-    // DELETE: Remove movie
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        int id = Integer.parseInt(request.getPathInfo().substring(1));
-        List<Movie> movies = readMovies(request);
-        boolean removed = movies.removeIf(m -> m.getId() == id);
-
-        if (removed) {
-            writeMovies(movies, request);
-            response.setStatus(HttpServletResponse.SC_OK);
-        } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-        }
-    }
-
-    // Helper: Filter movies by search term
-    private List<Movie> filterMovies(List<Movie> movies, String term, String type) {
-        return movies.stream()
-                .filter(m -> {
-                    switch (type) {
-                        case "title": return m.getTitle().toLowerCase().contains(term.toLowerCase());
-                        case "genre": return m.getGenre().toLowerCase().contains(term.toLowerCase());
-                        case "showtime": return m.getShowtime().contains(term);
-                        case "releaseDate": return m.getReleaseDate().toString().contains(term);
-                        default: return true;
-                    }
-                })
-                .collect(Collectors.toList());
-    }
-
-    // Helper: Read movies from file
-    private List<Movie> readMovies(HttpServletRequest request) throws IOException {
-        String realPath = getRealPath(request);
-        if (!Files.exists(Paths.get(realPath))) return new ArrayList<>();
-        return Files.readAllLines(Paths.get(realPath)).stream()
-                .map(Movie::fromString)
-                .collect(Collectors.toList());
-    }
-
-    // Helper: Write movies to file
-    private void writeMovies(List<Movie> movies, HttpServletRequest request) throws IOException {
-        Files.write(Paths.get(getRealPath(request)),
-                movies.stream()
-                        .map(Movie::toString)
-                        .collect(Collectors.toList()));
-    }
-
-    // Helper: Generate new ID
-    private int generateId(HttpServletRequest request) throws IOException {
-        List<Movie> movies = readMovies(request);
-        return movies.stream().mapToInt(Movie::getId).max().orElse(0) + 1;
-    }
-
-    // Helper: Parse request body
-    private Map<String, String> parseBody(HttpServletRequest request) throws IOException {
-        String body = request.getReader().lines().collect(Collectors.joining());
-        return Arrays.stream(body.split("&"))
-                .map(pair -> pair.split("="))
-                .collect(Collectors.toMap(
-                        kv -> kv[0],
-                        kv -> kv.length > 1 ? kv[1] : ""
-                ));
+        // Redirect to refresh the movie list
+        response.sendRedirect("index.html");
     }
 }

@@ -1,5 +1,6 @@
 package lk.sliit.onlinemovieticketreservationplatform.onlinemovieticketreservationplatform;
 
+
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class MovieManager {
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                Movie movie = Movie.fromString(line);
+                Movie movie = fromString(line);
                 if (movie != null) {
                     movieList.add(movie);
                 }
@@ -28,6 +29,25 @@ public class MovieManager {
             e.printStackTrace();
         }
         return movieList;
+    }
+
+    // Parse movie from string
+    private Movie fromString(String line) {
+        String[] parts = line.split(",", 6);
+        if (parts.length == 6) {
+            int id = Integer.parseInt(parts[0]);
+            String title = parts[1];
+            String genre = parts[2];
+            LocalDate releaseDate = LocalDate.parse(parts[3]);
+            String status = parts[4];
+            String posterLink = parts[5];
+            if ("Upcoming".equals(status)) {
+                return new UpcomingMovie(id, title, genre, releaseDate, posterLink);
+            } else if ("Current".equals(status)) {
+                return new CurrentMovie(id, title, genre, releaseDate, posterLink);
+            }
+        }
+        return null;
     }
 
     // Save movies to file
