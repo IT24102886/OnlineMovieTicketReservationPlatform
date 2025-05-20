@@ -1,0 +1,5 @@
+13c39ead-7beb-4617-8ad6-29b713615dd7|c0793f59-630a-41cf-95c5-a1bbfb2f6a4b|First Screen|10|Regular
+d5e8b859-4e4e-4fea-8562-bdcd567eb500|c0793f59-630a-41cf-95c5-a1bbfb2f6a4b|One two Screen|25|IMAX
+632e03b9-5c88-4e57-bd83-0f34f8fc5680|c0793f59-630a-41cf-95c5-a1bbfb2f6a4b|1.0.0|25|3D
+8953d299-bb43-4b08-bfed-daa6f555fb31|6c5c7e8d-d424-4ba8-a32d-47b748219d63|ABD DOWN South|15|4DX
+2f00e4df-26ac-4716-a083-c67c33ec9cc6|c0793f59-630a-41cf-95c5-a1bbfb2f6a4b|Screen 12|20|IMAX

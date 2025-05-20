@@ -1,0 +1,446 @@
+/* QuickFlicks Dark Theme with Cyan/Pink Accents */
+:root {
+    --primary-bg: #121212;
+    --secondary-bg: #1e1e1e;
+    --card-bg: #252525;
+    --primary-color: #00e6e6;
+    --secondary-color: #ff3399;
+    --text-color: #ffffff;
+    --text-muted: #a0a0a0;
+    --border-color: #333333;
+}
+
+body {
+    background-color: var(--primary-bg);
+    color: var(--text-color);
+    font-family: 'Poppins', sans-serif;
+    padding-top: 56px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
+}
+
+/* Navigation */
+.navbar {
+    background-color: var(--secondary-bg) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand {
+    color: var(--primary-color) !important;
+    font-weight: 600;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: var(--text-color) !important;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: var(--primary-color) !important;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--secondary-bg);
+    color: var(--text-muted);
+    padding: 20px 0;
+    margin-top: auto;
+}
+
+/* Cards */
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+    background-color: rgba(0, 230, 230, 0.1);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.card-title {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.card-subtitle {
+    color: var(--text-muted);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--primary-bg);
+    font-weight: 500;
+}
+
+.btn-primary:hover {
+    background-color: #00b3b3;
+    border-color: #00b3b3;
+    color: var(--primary-bg);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: white;
+    font-weight: 500;
+}
+
+.btn-secondary:hover {
+    background-color: #e60073;
+    border-color: #e60073;
+}
+
+.btn-info {
+    background-color: #3399ff;
+    border-color: #3399ff;
+}
+
+.btn-warning {
+    background-color: #ffcc00;
+    border-color: #ffcc00;
+    color: var(--primary-bg);
+}
+
+.btn-danger {
+    background-color: #ff3366;
+    border-color: #ff3366;
+}
+
+.btn-success {
+    background-color: #00cc66;
+    border-color: #00cc66;
+}
+
+/* Tables */
+.table {
+    color: var(--text-color);
+}
+
+.table thead th {
+    background-color: var(--secondary-bg);
+    border-color: var(--border-color);
+    color: var(--primary-color);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(30, 30, 30, 0.7);
+}
+
+.table td, .table th {
+    border-color: var(--border-color);
+}
+
+/* Forms */
+.form-control {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.form-control:focus {
+    background-color: var(--secondary-bg);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 230, 230, 0.25);
+    color: var(--text-color);
+}
+
+.form-label {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+/* Jumbotron */
+.jumbotron {
+    background-color: var(--secondary-bg);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* List Group */
+.list-group-item {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.list-group-item a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.list-group-item a:hover {
+    text-decoration: underline;
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    padding: 5px 10px;
+}
+
+.bg-secondary {
+    background-color: var(--secondary-color) !important;
+}
+
+/* Theater Cards */
+.theater-card {
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+.theater-card:hover {
+    transform: translateY(-5px);
+}
+
+.theater-name {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.theater-location {
+    color: var(--secondary-color);
+    font-size: 1rem;
+}
+
+.theater-contact {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.theater-hours {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+/* Facilities */
+.facilities-section {
+    margin: 2rem 0;
+}
+
+.facility-item {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.facility-icon {
+    color: var(--primary-color);
+    margin-right: 5px;
+}
+
+/* Screen Cards */
+.screen-card {
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+.screen-card:hover {
+    transform: translateY(-5px);
+}
+
+.screen-name {
+    color: var(--primary-color);
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.screen-type {
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+}
+
+.screen-capacity {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.screen-feature {
+    background-color: rgba(0, 230, 230, 0.1);
+    border-radius: 4px;
+    color: var(--primary-color);
+    display: inline-block;
+    font-size: 0.8rem;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    padding: 3px 8px;
+}
+
+/* Seat Selection */
+.seat-container {
+    margin: 30px auto;
+    max-width: 800px;
+    overflow-x: auto;
+}
+
+.screen-display {
+    width: 80%;
+    height: 30px;
+    background-color: var(--primary-color);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30px;
+    color: var(--primary-bg);
+    font-weight: bold;
+    box-shadow: 0 0 20px rgba(0, 230, 230, 0.5);
+}
+
+.seat-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.row-label {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.seat {
+    width: 35px;
+    height: 35px;
+    margin: 3px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+}
+
+.seat-available {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.seat-selected {
+    background-color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-bg);
+}
+
+.seat-booked {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.seat-legend {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.legend-box {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    margin-right: 5px;
+}
+
+.legend-available {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--primary-color);
+}
+
+.legend-selected {
+    background-color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+.legend-booked {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    opacity: 0.5;
+}
+
+/* Our Theaters Section */
+.our-theaters-section {
+    margin: 2rem 0;
+}
+
+.theater-type {
+    color: var(--secondary-color);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.theater-specs {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.theater-spec {
+    margin-right: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.theater-features {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.theater-feature {
+    background-color: rgba(255, 51, 153, 0.1);
+    border-radius: 4px;
+    color: var(--secondary-color);
+    display: inline-block;
+    font-size: 0.8rem;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    padding: 5px 10px;
+}
+
+/* Section Headers */
+.section-header {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.section-icon {
+    margin-right: 10px;
+    font-size: 1.8rem;
+}
