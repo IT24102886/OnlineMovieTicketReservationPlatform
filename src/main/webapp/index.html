@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Flicks | Movie Management</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body onload="loadMovies()">
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#"><span class="quick">QUICK</span><span class="flicks">FLICKS</span></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="index.html"><i class="fas fa-home me-1"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-film me-1"></i> Movies</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-carousel">
+        <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80" class="d-block w-100" alt="Movie Night">
+        <div class="hero-overlay">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">MOVIE MANAGEMENT</h1>
+                    <p class="hero-subtitle">Add, update, and organize the movie collection.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#movie-form" class="btn btn-red"><i class="fas fa-plus me-2"></i> ADD MOVIE</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Movie Management Form -->
+<section id="movie-form" class="py-5" style="background-color: var(--secondary-black);">
+    <div class="container">
+        <h2 class="section-title text-white"><i class="fas fa-edit me-2"></i> MANAGE MOVIES</h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="movie-card p-4">
+                    <form action="MovieServlet" method="post" id="movieForm">
+                        <input type="hidden" name="id" id="movie-id">
+                        <div class="form-group mb-3">
+                            <label for="title" class="form-label">Title:</label>
+                            <input type="text" id="title" name="title" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="genre" class="form-label">Genre:</label>
+                            <select id="genre" name="genre" class="form-select" required>
+                                <option value="" disabled selected>Select Genre</option>
+                                <option value="Action">Action</option>
+                                <option value="Comedy">Comedy</option>
+                                <option value="Drama">Drama</option>
+                                <option value="SciFi">Sci-Fi</option>
+                                <option value="Horror">Horror</option>
+                                <option value="Adventure">Adventure</option>
+                                <option value="Family">Family</option>
+                                <option value="Romance">Romance</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="release-date" class="form-label">Release Date:</label>
+                            <input type="date" id="release-date" name="release-date" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="status" class="form-label">Status:</label>
+                            <select id="status" name="status" class="form-select" required>
+                                <option value="Upcoming">Upcoming</option>
+                                <option value="Current">Current</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="poster-link" class="form-label">Poster Link:</label>
+                            <input type="url" id="poster-link" name="poster-link" class="form-control" placeholder="https://example.com/poster.jpg">
+                        </div>
+                        <div class="d-flex flex-wrap gap-3">
+                            <button type="submit" name="action" value="add" class="btn btn-red"><i class="fas fa-plus me-2"></i> Add Movie</button>
+                            <button type="submit" name="action" value="add" class="btn btn-red"><i class="fas fa-edit me-2"></i> Update Movie</button>
+                            <button type="button" onclick="clearForm()" class="btn btn-outline-red"><i class="fas fa-times me-2"></i> Clear</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Now Showing Section -->
+<section id="now-showing" class="py-5" style="background-color: var(--secondary-black);">
+    <div class="container py-5">
+        <h2 class="section-title text-white"><i class="fas fa-film me-2"></i> NOW SHOWING</h2>
+        <div class="filter-sort mb-4 d-flex flex-wrap gap-3">
+            <div>
+                <label for="sort" class="form-label text-white me-2">Sort by Release Date:</label>
+                <select id="sort" onchange="sortMovies()" class="form-select" style="width: auto; display: inline-block;">
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+            </div>
+            <div>
+                <label for="filter-genre" class="form-label text-white me-2">Filter by Genre:</label>
+                <select id="filter-genre" onchange="filterMovies()" class="form-select" style="width: auto; display: inline-block;">
+                    <option value="All">All</option>
+                    <option value="Action">Action</option>
+                    <option value="Comedy">Comedy</option>
+                    <option value="Drama">Drama</option>
+                    <option value="SciFi">Sci-Fi</option>
+                    <option value="Horror">Horror</option>
+                </select>
+            </div>
+        </div>
+        <div id="current-movies" class="row g-4">
+            <!-- Dynamic current movie list populated by JavaScript -->
+        </div>
+    </div>
+</section>
+
+<!-- Coming Soon Section -->
+<section id="coming-soon" class="py-5" style="background-color: var(--dark-gray);">
+    <div class="container py-5">
+        <h2 class="section-title text-white"><i class="fas fa-calendar-alt me-2"></i> COMING SOON</h2>
+        <div id="upcoming-movies" class="row g-4">
+            <!-- Dynamic upcoming movie list populated by JavaScript -->
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="footer-logo">QUICK<span>FLICKS</span></div>
+                <p>Manage your movie collection with ease and enjoy a premium experience.</p>
+            </div>
+            <div class="col-lg-2 col-md-6 mb-4">
+                <div class="footer-links">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#">Movies</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="footer-links">
+                    <h5>Contact</h5>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt me-2"></i> 123 Main St, Malabe</li>
+                        <li><i class="fas fa-phone me-2"></i> (0112) 987-654</li>
+                        <li><i class="fas fa-envelope me-2"></i> info@quickflicks.com</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>© 2025 QUICK FLICKS. ALL RIGHTS RESERVED.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap 5 JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // Movie card hover effect
+    document.addEventListener('mouseover', function(e) {
+        if (e.target.closest('.movie-card')) {
+            const card = e.target.closest('.movie-card');
+            card.style.transform = 'translateY(-10px)';
+            card.style.boxShadow = '0 0 10px rgba(6, 182, 212, 0.5)';
+            const poster = card.querySelector('.movie-poster');
+            if (poster) poster.style.transform = 'scale(1.05)';
+        }
+    });
+
+    document.addEventListener('mouseout', function(e) {
+        if (e.target.closest('.movie-card')) {
+            const card = e.target.closest('.movie-card');
+            card.style.transform = 'translateY(0)';
+            card.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.2)';
+            const poster = card.querySelector('.movie-poster');
+            if (poster) poster.style.transform = 'scale(1)';
+        }
+    });
+
+    function loadMovies() {
+        fetch('MovieServlet')
+            .then(response => response.text())
+            .then(data => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data, 'text/html');
+                document.getElementById('current-movies').innerHTML = doc.getElementById('current-movies').innerHTML;
+                document.getElementById('upcoming-movies').innerHTML = doc.getElementById('upcoming-movies').innerHTML;
+            })
+            .catch(error => console.error('Error loading movies:', error));
+    }
+
+    function sortMovies() {
+        let sort = document.getElementById('sort').value;
+        fetch(`MovieServlet?sort=${sort}`)
+            .then(response => response.text())
+            .then(data => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data, 'text/html');
+                document.getElementById('current-movies').innerHTML = doc.getElementById('current-movies').innerHTML;
+                document.getElementById('upcoming-movies').innerHTML = doc.getElementById('upcoming-movies').innerHTML;
+            })
+            .catch(error => console.error('Error sorting movies:', error));
+    }
+
+    function filterMovies() {
+        let genre = document.getElementById('filter-genre').value;
+        fetch(`MovieServlet?genre=${genre}`)
+            .then(response => response.text())
+            .then(data => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data, 'text/html');
+                document.getElementById('current-movies').innerHTML = doc.getElementById('current-movies').innerHTML;
+                document.getElementById('upcoming-movies').innerHTML = doc.getElementById('upcoming-movies').innerHTML;
+            })
+            .catch(error => console.error('Error filtering movies:', error));
+    }
+
+    function editMovie(id) {
+        fetch(`MovieServlet?action=get&id=${id}`)
+            .then(response => response.text())
+            .then(data => {
+                const [id, title, genre, releaseDate, status, posterLink] = data.split(',', 6);
+                document.getElementById('movie-id').value = id;
+                document.getElementById('title').value = title;
+                document.getElementById('genre').value = genre;
+                document.getElementById('release-date').value = releaseDate;
+                document.getElementById('status').value = status;
+                document.getElementById('poster-link').value = posterLink;
+                window.scrollTo({ top: document.getElementById('movie-form').offsetTop, behavior: 'smooth' });
+            })
+            .catch(error => console.error('Error fetching movie:', error));
+    }
+
+    function deleteMovie(id) {
+        if (confirm('Are you sure you want to delete this movie?')) {
+            fetch(`MovieServlet?action=delete&id=${id}`, { method: 'POST' })
+                .then(() => loadMovies())
+                .catch(error => console.error('Error deleting movie:', error));
+        }
+    }
+
+    function clearForm() {
+        document.getElementById('movieForm').reset();
+        document.getElementById('movie-id').value = '';
+    }
+</script>
+</body>
+</html>
