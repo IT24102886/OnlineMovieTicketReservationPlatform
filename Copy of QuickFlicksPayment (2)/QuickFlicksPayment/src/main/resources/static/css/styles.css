@@ -1,0 +1,166 @@
+/* Custom styles for QuickFlicks Payment System */
+
+/* Main color scheme */
+:root {
+    --primary-color: #00bcd4;
+    --secondary-color: #212529;
+    --accent-color: #ff5722;
+
+    /* Light theme colors */
+    --light-bg: #f8f9fa;
+    --light-text: #212529;
+    --light-card-bg: #ffffff;
+    --light-input-bg: #ffffff;
+    --light-border: #dee2e6;
+
+    /* Dark theme colors */
+    --dark-bg: #121212;
+    --dark-text: #f8f9fa;
+    --dark-card-bg: #1e1e1e;
+    --dark-input-bg: #2d2d2d;
+    --dark-border: #444444;
+}
+
+/* Theme variables */
+:root {
+    --bg-color: var(--light-bg);
+    --text-color: var(--light-text);
+    --card-bg: var(--light-card-bg);
+    --input-bg: var(--light-input-bg);
+    --border-color: var(--light-border);
+}
+
+/* Dark theme class */
+.dark-theme {
+    --bg-color: var(--dark-bg);
+    --text-color: var(--dark-text);
+    --card-bg: var(--dark-card-bg);
+    --input-bg: var(--dark-input-bg);
+    --border-color: var(--dark-border);
+}
+
+/* Body styles */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Main content wrapper */
+.content-wrapper {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+/* Navbar customization */
+.navbar-brand .text-info {
+    font-weight: bold;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+}
+
+.theme-toggle i {
+    margin-right: 5px;
+}
+
+/* Footer styles */
+footer {
+    flex-shrink: 0;
+    margin-top: auto;
+    padding: 15px 0;
+    width: 100%;
+}
+
+/* Card customization */
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.card-header {
+    font-weight: bold;
+}
+
+/* Table styling */
+.table {
+    color: var(--text-color);
+}
+
+.dark-theme .table {
+    color: var(--dark-text);
+}
+
+.dark-theme .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Form styling */
+.form-control, .input-group-text {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(0, 188, 212, 0.25);
+    background-color: var(--input-bg);
+    color: var(--text-color);
+}
+
+/* Button styling */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #00a5b9;
+    border-color: #00a5b9;
+}
+
+/* Modal styling for dark theme */
+.dark-theme .modal-content {
+    background-color: var(--dark-card-bg);
+    color: var(--dark-text);
+    border-color: var(--dark-border);
+}
+
+/* Print styles */
+@media print {
+    .navbar, .footer, .btn {
+        display: none !important;
+    }
+
+    .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+
+    body {
+        background-color: white;
+        color: black;
+    }
+}
