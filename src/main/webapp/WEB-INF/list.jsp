@@ -3,96 +3,58 @@
 <%@ include file="../common/header.jsp" %>
 
 <div class="card">
-    <div class="card-header bg-primary text-dark d-flex justify-content-between align-items-center">
-        <h2 class="mb-0">Your Bookings</h2>
-        <a href="<c:url value='/bookings/create' />" class="btn btn-success">New Booking</a>
+    <div class="card-header bg-primary text-dark">
+        <h2 class="mb-0">Available Movies</h2>
     </div>
     <div class="card-body">
-        <div class="card mb-4" style="background-color: rgba(0, 225, 255, 0.1);">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <span class="badge bg-primary rounded-circle p-3">
-                            <i class="bi bi-clock"></i> ${queueSize}
-                        </span>
-                    </div>
-                    <div>
-                        <h5 class="mb-1">Queue Status</h5>
-                        <p class="mb-0">There are currently <strong>${queueSize}</strong> bookings in the queue.</p>
-                    </div>
-                    <div class="ms-auto">
-                        <a href="<c:url value='/bookings/queue' />" class="btn btn-info btn-sm">View Queue</a>
+        <div class="row">
+            <c:forEach items="${movies}" var="movie">
+                <div class="col-md-4 mb-4">
+                    <div class="card movie-card h-100">
+                        <div class="card-header bg-primary text-dark">
+                            <h5 class="card-title mb-0">${movie.title}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <span class="badge bg-secondary me-1">${movie.genre}</span>
+                                <span class="badge bg-secondary">${movie.duration} min</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span><strong>Price:</strong></span>
+                                <span class="text-primary">$${movie.ticketPrice}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span><strong>Available Seats:</strong></span>
+                                <span class="badge bg-success">${movie.availableSeats}</span>
+                            </div>
+                            <p class="mb-2"><strong>Show Times:</strong></p>
+                            <ul class="list-group mb-3">
+                                <c:forEach items="${movie.showTimes}" var="showTime">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        ${showTime}
+                                        <a href="<c:url value='/bookings/create?movieId=${movie.id}&showTime=${showTime}' />" class="btn btn-sm btn-success">Book</a>
+                                    </li>
+                                </c:forEach>
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-grid gap-2">
+                                <a href="<c:url value='/movies/${movie.id}' />" class="btn btn-info">View Details</a>
+                                <a href="<c:url value='/bookings/create?movieId=${movie.id}' />" class="btn btn-success">Book Tickets</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </c:forEach>
+
+            <c:if test="${empty movies}">
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        No movies available at the moment.
+                    </div>
+                </div>
+            </c:if>
         </div>
-
-        <c:if test="${not empty bookings}">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead style="background-color: var(--secondary-color); color: var(--text-color);">
-                        <tr>
-                            <th>ID</th>
-                            <th>Customer</th>
-                            <th>Movie</th>
-                            <th>Show Time</th>
-                            <th>Tickets</th>
-                            <th>Total Price</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach items="${bookings}" var="booking">
-                            <tr>
-                                <td><span class="badge bg-secondary">${booking.id.substring(0, 8)}...</span></td>
-                                <td>${booking.customerName}</td>
-                                <td><span class="text-primary">${booking.movieTitle}</span></td>
-                                <td>${booking.showTime}</td>
-                                <td class="text-center"><span class="badge bg-secondary">${booking.numberOfTickets}</span></td>
-                                <td class="text-primary">$${booking.totalPrice}</td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${booking.status eq 'PENDING'}">
-                                            <span class="badge bg-warning status-pending">PENDING</span>
-                                        </c:when>
-                                        <c:when test="${booking.status eq 'CONFIRMED'}">
-                                            <span class="badge bg-success status-confirmed">CONFIRMED</span>
-                                        </c:when>
-                                        <c:when test="${booking.status eq 'CANCELLED'}">
-                                            <span class="badge bg-danger status-cancelled">CANCELLED</span>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span class="badge bg-secondary">${booking.status}</span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-                                <td>
-                                    <div class="btn-group" role="group">
-                                        <a href="<c:url value='/bookings/${booking.id}' />" class="btn btn-sm btn-info">View</a>
-                                        <c:if test="${booking.status eq 'CONFIRMED'}">
-                                            <a href="<c:url value='/bookings/edit/${booking.id}' />" class="btn btn-sm btn-warning">Edit</a>
-                                        </c:if>
-                                        <a href="<c:url value='/bookings/delete/${booking.id}' />" class="btn btn-sm btn-danger"
-                                           onclick="return confirm('Are you sure you want to delete this booking?')">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-            </div>
-        </c:if>
-
-        <c:if test="${empty bookings}">
-            <div class="card text-center p-5">
-                <div class="card-body">
-                    <h4 class="mb-3">No Bookings Found</h4>
-                    <p>You don't have any bookings yet.</p>
-                    <a href="<c:url value='/bookings/create' />" class="btn btn-primary mt-2">Book Tickets Now</a>
-                </div>
-            </div>
-        </c:if>
     </div>
 </div>
 
