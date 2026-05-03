@@ -1,5 +1,5 @@
 package lk.sliit.onlinemovieticketreservationplatform.onlinemovieticketreservationplatform;
-#test
+//test
 
 import java.io.*;
 
